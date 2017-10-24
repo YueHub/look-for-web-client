@@ -1,9 +1,5 @@
 <template>
   <div>
-    <group>
-      <cell is-link title="Simple" link="/component/tabbar-simple"></cell>
-      <cell is-link title="Switch icons" link="/component/tabbar-icon"></cell>
-    </group>
     <tabbar>
       <tabbar-item selected link="/index">
         <img slot="icon" src="../../assets/logo.png">
