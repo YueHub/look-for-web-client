@@ -1,5 +1,4 @@
 # look-for
-<<<<<<< HEAD
 
 > 外接项目 - 猎头招聘 / 有偿转发 / look for somebody
 
@@ -18,8 +17,3 @@ npm run build
 # build for production and view the bundle analyzer report
 npm run build --report
 ```
-
-For detailed explanation on how things work, checkout the [guide](http://vuejs-templates.github.io/webpack/) and [docs for vue-loader](http://vuejs.github.io/vue-loader).
-=======
-外接项目
->>>>>>> f80675aeae5e631b69c54973e6063e9c9f9d1e41
