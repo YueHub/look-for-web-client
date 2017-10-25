@@ -4,7 +4,7 @@ import VueRouter from 'vue-router'
 import Preview from '@/components/Preview'
 import Acticle from '@/pages/acticle'
 import Index from '@/pages/index/index'
-import Publish from '@/pages/publish/publish'
+import Release from '@/pages/release/release'
 import Mine from '@/pages/mine/mine'
 
 Vue.use(VueRouter)
@@ -27,9 +27,9 @@ export default new VueRouter({
       component: Index
     },
     {
-      path: '/publish',
-      name: 'Publish',
-      component: Publish
+      path: '/release',
+      name: 'Release',
+      component: Release
     },
     {
       path: '/mine',

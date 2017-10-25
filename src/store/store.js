@@ -12,7 +12,7 @@ const state = {
       content: '主页'
     },
     {
-      link: '/publish',
+      link: '/release',
       imgName: 'logo.png',
       content: '发布'
     },
