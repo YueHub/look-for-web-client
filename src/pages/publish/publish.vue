@@ -7,9 +7,9 @@
 </template>
 
 <script scoped>
-import XHeader from '@/components/common/XHeader'
+import XHeader from '@/components/common/HeaderIndex'
 import FormStep from '@/components/formStep/FormStep'
-import TabBar from '@/components/common/TabBar'
+import TabBar from '@/components/common/BottomTabBar'
 
 export default {
   components: {

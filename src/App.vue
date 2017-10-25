@@ -5,7 +5,10 @@
 </template>
 
 <script>
+import store from '@/store/store'
+
 export default {
+  store,
   name: 'app'
 }
 </script>

@@ -93,8 +93,8 @@
 <script>
 import { Cell, CellBox, CellFormPreview, Group, Badge } from 'vux'
 
-import XHeader from '@/components/common/XHeader'
-import TabBar from '@/components/common/TabBar'
+import XHeader from '@/components/common/HeaderIndex'
+import TabBar from '@/components/common/BottomTabBar'
 
 export default {
   components: {
