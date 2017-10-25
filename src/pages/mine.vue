@@ -113,7 +113,7 @@ export default {
   },
   methods: {
     onClick () {
-      console.log('on click')
+      // console.log('on click')
     }
   },
   data () {

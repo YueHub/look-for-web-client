@@ -15,7 +15,8 @@ export default {
   },
   methods: {
     onImgError (item, $event) {
-      console.log(item, $event)
+      $event
+      // console.log(item, $event)
     }
   },
   data () {
