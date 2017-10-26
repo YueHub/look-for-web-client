@@ -2,7 +2,7 @@ import Vue from 'vue'
 import VueRouter from 'vue-router'
 
 import Preview from '@/components/Preview'
-import Acticle from '@/pages/acticle'
+import InfoBoard from '@/pages/info-board'
 import Index from '@/pages/index/index'
 import Release from '@/pages/release/release'
 import Mine from '@/pages/mine/mine'
@@ -17,9 +17,9 @@ export default new VueRouter({
       component: Preview
     },
     {
-      path: '/acticle',
-      name: 'Acticle',
-      component: Acticle
+      path: '/infoboard',
+      name: 'InfoBoard',
+      component: InfoBoard
     },
     {
       path: '/index',

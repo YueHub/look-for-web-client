@@ -1,8 +1,12 @@
 <template>
-  <div>
+  <div style="position: relative;
+    height: 100%;">
     <x-header></x-header>
-
-    <group>
+  
+    <div style="padding-top: 46px;
+    padding-bottom: 55px;box-sizing: border-box;
+    height: 100%;overflow: auto;">
+      <group>
       <cell :title="('我的账号')" :value="('Protected')" @click.native="onClick"></cell>
       <cell :title="('Money')" @click.native="onClick" :is-loading="!money" :value="money"></cell>
       <cell :title="('Withdraw')" disabled is-link></cell>
@@ -83,6 +87,8 @@
     <group :title="('isLink is set to true when link exists')">
       <cell :title="('Go to Radio Demo')" link="/component/radio" inline-desc='link="/component/radio"'></cell>
     </group>
+    </div>
+    
 
     <bottom-tab-bar></bottom-tab-bar>
   </div>

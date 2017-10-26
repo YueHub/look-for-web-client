@@ -1,6 +1,6 @@
 <template>
-  <div>    
-    <div>
+  <div class="form-step">
+
       <!-- step tab -->
       <tab :line-width="2" bar-active-color="#668599" v-model="activeStepIndex">
         <tab-item :disabled="stepDisabled[index]" :active-class="'active-' + (index + 1)" class="vux-center" :selected="activeStepIndex === index" v-for="(item, index) in stepTabs" @click="activeStepIndex = index" :key="index">
@@ -9,7 +9,7 @@
       </tab>
 
       <!-- step swiper -->
-      <swiper v-model="activeStepIndex" height="500px" :show-dots="false">
+      <swiper v-model="activeStepIndex" height="350px" :min-moving-distance="999" :show-dots="false">
         <swiper-item>
           <div class="tab-swiper">
             <release-basic-info-template ref="releaseBasicInfoTemplate"></release-basic-info-template>
@@ -26,20 +26,16 @@
           </div>
         </swiper-item>
       </swiper>
-    </div>
+
 
     <!-- prevStep and nextStep button -->
-    <div class="box">
-      <flexbox>
-         <flexbox-item>
-          <x-button :disabled="prevStepDisabled" @click.native="prevStep" type="primary">上一步</x-button>
-        </flexbox-item>
-        <flexbox-item>
-          <x-button :disabled="nextStepDisabled" @click.native="nextStep" type="primary">下一步</x-button>
-        </flexbox-item>
-      </flexbox>
+    <div class="prev-step-btn">
+      <x-button :disabled="prevStepDisabled" @click.native="prevStep" type="primary">上一步</x-button>
     </div>
-
+    <div class="next-step-btn">
+      <x-button :disabled="nextStepDisabled" @click.native="nextStep" type="primary">下一步</x-button>
+    </div>
+    
     <toast v-model="showWarnMsg" type="warn">{{ warnMsg }}</toast>
 
   </div>
@@ -52,8 +48,6 @@ import {
   XButton,
   Swiper,
   SwiperItem,
-  Flexbox,
-  FlexboxItem,
   Toast
 } from "vux";
 
@@ -70,8 +64,6 @@ export default {
     XButton,
     Swiper,
     SwiperItem,
-    Flexbox,
-    FlexboxItem,
     Toast,
     "release-basic-info-template": ReleaseBasicInfoTemplate,
     "release-extra-info-template": ReleaseExtraInfoTemplate,
@@ -145,12 +137,11 @@ export default {
 </script>
 
 <style lang="less" scoped>
-@import "~vux/src/styles/1px.less";
-@import "~vux/src/styles/center.less";
 
-.box {
-  padding: 15px;
+.form-step {
+  overflow: auto;
 }
+
 .active-1 {
   color: rgb(252, 55, 140) !important;
   border-color: rgb(252, 55, 140) !important;
@@ -166,5 +157,17 @@ export default {
 .tab-swiper {
   background-color: #fff;
   height: 100px;
+}
+.prev-step-btn {
+  float: left;
+  margin-top: 2%;
+  padding: 5%;
+  width: 40%;
+}
+.next-step-btn {
+  float: left;
+  margin-top: 2%;
+  padding: 5%;
+  width: 40%;
 }
 </style>

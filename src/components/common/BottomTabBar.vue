@@ -1,5 +1,5 @@
 <template>
-  <div>
+
     <tabbar>
       <!-- <tabbar-item selected show-dot badge="2" link="/index"> -->
       <tabbar-item show-dot v-for="bottomTabBarItem in bottomTabBarItems" :key="bottomTabBarItem.id" :link="bottomTabBarItem.link">
@@ -7,7 +7,7 @@
         <span slot="label">{{ bottomTabBarItem.content }}</span>
       </tabbar-item>
     </tabbar>
-  </div>
+
 </template>
 
 <script scoped>
@@ -23,3 +23,9 @@ export default {
   }
 }
 </script>
+
+<style>
+.weui-tabbar {
+  position: fixed !important;
+}
+</style>

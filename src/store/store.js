@@ -5,7 +5,7 @@ Vue.use(Vuex)
 
 const state = {
   platform: 1, // 平台
-  bottomTabBarItems: [
+  bottomTabBarItems: [  // 底部导航栏
     {
       link: '/index',
       imgName: 'logo.png',
@@ -21,7 +21,10 @@ const state = {
       imgName: 'logo.png',
       content: '我'
     }
-  ]
+  ],
+  releaseInfo: {  // 发布信息
+    
+  }
 }
 
 const mutations = {

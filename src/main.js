@@ -4,10 +4,11 @@ import Vue from 'vue'
 import FastClick from 'fastclick'
 import App from './App'
 import router from './router'
-import { Upload } from 'element-ui'
+import { Upload, Button } from 'element-ui'
 import 'element-ui/lib/theme-default/index.css'
 
 Vue.use(Upload)
+Vue.use(Button)
 
 FastClick.attach(document.body)
 
