@@ -1,6 +1,6 @@
 <template>
   <div>
-    <header-back :title="'个人信息'"></header-back>
+    <header-back :title="'帮助'"></header-back>
   </div>
 </template>
 

@@ -1,15 +1,14 @@
 <template>
   <div>
-    <header-back :title="'浏览记录'"></header-back>
+    <header-back :title="'我的揭榜'"></header-back>
     <div class="cell-list">
       <panel :list="list" :type="'5'" @on-img-error="onImgError"></panel>
     </div>
-    
   </div>
 </template>
 
 <script scoped>
-import HeaderBack from '@/components/common/HeaderBack'
+import HeaderBack from "@/components/common/HeaderBack";
 import { Panel } from "vux";
 
 export default {
@@ -33,7 +32,7 @@ export default {
       }]
     }
   }
-}
+};
 </script>
 
 <style scoped>
@@ -42,3 +41,5 @@ export default {
   padding-bottom: 55px;
 }
 </style>
+
+
