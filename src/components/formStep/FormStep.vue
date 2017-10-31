@@ -9,20 +9,90 @@
       </tab>
 
       <!-- step swiper -->
-      <swiper v-model="activeStepIndex" height="350px" :min-moving-distance="999" :show-dots="false">
+      <swiper class="step-swiper" v-model="activeStepIndex" height="350px" :min-moving-distance="999" :show-dots="false">
         <swiper-item>
           <div class="tab-swiper">
-            <release-basic-info-template ref="releaseBasicInfoTemplate"></release-basic-info-template>
+             <div class="tab-swiper">
+            <group gutter="0.1em" label-width="4.5em" label-margin-right="2em" label-align="left">
+              <x-input title="标题" placeholder="请填写标题" v-model="title"></x-input>
+              <x-input title="感谢金" placeholder="请输入感谢金" v-model="money"></x-input>
+              <div class="tool-tip">
+                建议输入 200 以上金额
+              </div>
+              <x-textarea title="详细信息" placeholder="请填写详细信息" :show-counter="false" :rows="4" v-model="detailInfo"></x-textarea>
+              <div class="tool-tip">
+                请填写招聘详细要求，如公司、职位、薪酬、职位技能要求等...
+              </div>
+              <x-input title="手机号" placeholder="请输入手机号" v-model="phone"></x-input>
+              <div class="tool-tip">
+                请输入招聘联系电话，便于揭榜者和中标者联系
+              </div>
+              <x-switch title="使用号"></x-switch>
+            </group>
+
+            <div class="instruction">
+                注意事项注意事项注意事项注意事项注意事项注意事项注意事项注意事项注意事项注意事项
+                注意事项注意事项注意事项注意事项注意事项注意事项注意事项注意事项注意事项注意事项
+                注意事项注意事项注意事项注意事项注意事项注意事项注意事项注意事项注意事项注意事项
+              </div>
+          </div>
           </div>
         </swiper-item>
+
         <swiper-item>
           <div class="tab-swiper">
-            <release-extra-info-template ref="releaseExtraInfoTemplate"></release-extra-info-template>
+            <div class="tab-swiper">
+              <group>
+                <x-textarea title="自我介绍" placeholder="（可选）请填写自我介绍" :show-counter="false" :rows="4"></x-textarea>
+              </group>
+              <div class="tool-tip">
+                  填写自我介绍可以为有意应聘的人提供更多的信息
+              </div>
+
+              <group title="上传图像">
+                <el-upload
+                  action=""
+                  list-type="picture-card"
+                  :on-preview="handlePictureCardPreview"
+                  :on-remove="handleRemove">
+                  <i class="el-icon-plus"></i>
+                </el-upload>
+                <el-dialog v-model="dialogVisible" size="tiny">
+                  <img width="100%" :src="dialogImageUrl" alt="">
+                </el-dialog>
+              </group>
+              <div class="tool-tip">
+                  上传图像
+              </div>
+
+            </div>
           </div>
         </swiper-item>
+
         <swiper-item>
           <div class="tab-swiper">
-            <release-preview ref="releasePreview"></release-preview>
+            <div>
+  
+              <div>
+                <div class="instruction-title">注意事项</div>
+                <div class="instruction">
+                  注意事项注意事项注意事项注意事项注意事项注意事项注意事项注意事项注意事项注意事项
+                  注意事项注意事项注意事项注意事项注意事项注意事项注意事项注意事项注意事项注意事项
+                  注意事项注意事项注意事项注意事项注意事项注意事项注意事项注意事项注意事项注意事项
+                </div>
+              </div>
+
+              <div class="protocol">
+                <check-icon class="protocol-check-icon" :value.sync="checked" type="plain"></check-icon>
+                <a href="#" target="_blank">《用户服务协议》</a>
+              </div>
+
+              <div class="release-btn">
+                <el-button type="info" @click="previewInfoBoard">预览</el-button>
+                <el-button type="success">发布</el-button>
+              </div>
+              
+            </div>
           </div>
         </swiper-item>
       </swiper>
@@ -43,17 +113,19 @@
 
 <script scoped>
 import {
+  Group,
+  GroupTitle,
+  XInput,
+  XTextarea,
+  XSwitch,
   Tab,
   TabItem,
   XButton,
   Swiper,
   SwiperItem,
-  Toast
+  Toast,
+  CheckIcon
 } from "vux";
-
-import ReleaseBasicInfoTemplate from "@/components/formStep/ReleaseBasicInfoTemplate";
-import ReleaseExtraInfoTemplate from "@/components/formStep/ReleaseExtraInfoTemplate";
-import ReleasePreview from "@/components/formStep/ReleasePreview";
 
 const list = () => ["必填信息", "附加信息", "发布 / 预览"];
 
@@ -65,9 +137,12 @@ export default {
     Swiper,
     SwiperItem,
     Toast,
-    "release-basic-info-template": ReleaseBasicInfoTemplate,
-    "release-extra-info-template": ReleaseExtraInfoTemplate,
-    "release-preview": ReleasePreview
+    Group,
+    GroupTitle,
+    XInput,
+    XTextarea,
+    XSwitch,
+    CheckIcon
   },
   data() {
     return {
@@ -77,7 +152,18 @@ export default {
       prevStepDisabled: true,
       nextStepDisabled: false,
       showWarnMsg: false,
-      warnMsg: ""
+      warnMsg: "",
+
+      title: "",
+      money: 0,
+      detailInfo: "",
+      wechat: "",
+      phone: "",
+
+      checked: false,
+
+      dialogImageUrl: "",
+      dialogVisible: false
     };
   },
   watch: {
@@ -112,7 +198,7 @@ export default {
     check: function() {
       // 基本信息检查
       if (this.activeStepIndex === 0) {
-        var checkResult = this.$refs.releaseBasicInfoTemplate.check();
+        var checkResult = this.checkReleaseBasicInfo();
         if (checkResult.status === "fail") {
           this.showWarnMsg = true;
           this.warnMsg = checkResult.failMsg;
@@ -131,17 +217,62 @@ export default {
       if (this.activeStepIndex === 2) {
         return true;
       }
+    },
+    checkReleaseBasicInfo: function() {
+      var phoneReg = /^0{0,1}(13[0-9]|15[0-9]|153|156|18[7-9])[0-9]{8}$/; //手机正则
+
+      if (this.title === "") {
+        return {
+          status: "fail",
+          failMsg: "标题不能为空"
+        };
+      }
+      if (this.money === 0) {
+        this.moneyFocus = true;
+        return {
+          status: "fail",
+          failMsg: "奖金不能为 0"
+        };
+      }
+      if (this.detailInfo === "") {
+        return {
+          status: "fail",
+          failMsg: "详细信息不能为空"
+        };
+      }
+      if (this.phone === "") {
+        return {
+          status: "fail",
+          failMsg: "手机号不能为空"
+        };
+      }
+      if (!phoneReg.test(this.phone)) {
+        return {
+          status: "fail",
+          failMsg: "请输入正确格式的手机号"
+        };
+      }
+
+      return {
+        status: "success",
+        sucessMsg: ""
+      };
+    },
+    previewInfoBoard: function() {
+      this.$router.push({ name: "InfoBoard" });
+    },
+    handleRemove: function(file, fileList) {
+      console.log(file, fileList);
+    },
+    handlePictureCardPreview: function(file) {
+      this.dialogImageUrl = file.url;
+      this.dialogVisible = true;
     }
   }
 };
 </script>
 
-<style lang="less" scoped>
-
-.form-step {
-  overflow: auto;
-}
-
+<style lang="less">
 .active-1 {
   color: rgb(252, 55, 140) !important;
   border-color: rgb(252, 55, 140) !important;
@@ -154,20 +285,88 @@ export default {
   color: rgb(55, 174, 252) !important;
   border-color: rgb(55, 174, 252) !important;
 }
+
+.tool-tip {
+  position: relative;
+
+  border: solid 1px #49c0ec;
+  border-radius: 3px / 3px;
+  margin-top: 8px;
+  margin-left: auto;
+  margin-right: auto;
+  margin-bottom: 4px;
+  padding: 5px;
+  width: 85%;
+
+  font-size: 12px;
+  line-height: 18px;
+
+  background: #f4fbff;
+  color: #0083ad;
+  -moz-border-radius: 3px / 3px;
+  -webkit-border-radius: 3px 3px;
+}
+
+.instruction {
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  margin-top: 1em;
+  margin-left: auto;
+  margin-right: auto;
+  padding: 5px;
+
+  width: 90%;
+  font-size: 12px;
+  line-height: 18px;
+
+  background-color: #f5f5f5;
+  color: #333;
+  -moz-border-radius: 3px / 3px;
+  -webkit-border-radius: 3px 3px;
+}
+
+.vux-slider > .vux-swiper {
+  overflow-y: scroll !important;
+  position: relative;
+}
 .tab-swiper {
   background-color: #fff;
   height: 100px;
 }
 .prev-step-btn {
-  float: left;
-  margin-top: 2%;
-  padding: 5%;
+  position: fixed;
+  left: 1em;
+  bottom: 4em;
   width: 40%;
 }
 .next-step-btn {
-  float: left;
-  margin-top: 2%;
-  padding: 5%;
+  position: fixed;
+  right: 1em;
+  bottom: 4em;
   width: 40%;
+}
+
+.instruction-title {
+  margin-top: 1em;
+  margin-left: 1em;
+}
+.protocol-check-icon .weui-icon-circle {
+  font-size: 1em !important;
+}
+.protocol-check-icon .weui-icon-success-circle {
+  font-size: 1em !important;
+}
+.protocol {
+  margin-top: 1em;
+  text-align: center;
+}
+.protocol a {
+  margin-left: -8px;
+  font-size: 12px;
+  color: #2395ff;
+}
+.release-btn {
+  text-align: center;
+  margin-top: 2em;
 }
 </style>

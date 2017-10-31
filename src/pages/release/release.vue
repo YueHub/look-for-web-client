@@ -4,7 +4,10 @@
     <header-index :title="'发布'"></header-index>
 
     <!-- release info step -->
-    <form-step></form-step>
+    <div class="form-step">
+      <form-step></form-step>
+    </div>
+    
 
     <!-- bottom-tab-bar -->
     <bottom-tab-bar></bottom-tab-bar>
@@ -24,3 +27,9 @@ export default {
   }
 };
 </script>
+
+<style scoped>
+.form-step {
+  margin-top: 2.5em;
+}
+</style>
