@@ -1,9 +1,14 @@
 <template>
   <div>
     <x-header>
-      <x-icon class="header-index-icon" slot="overwrite-left" type="home" size="30" @click="jumpTo('index')"></x-icon>
+      <svg class="header-index-icon" aria-hidden="true" slot="overwrite-left" @click="jumpTo('index')" >
+        <use :xlink:href="'#icon-zhuye2'"></use>
+      </svg>
       {{ title }}
-      <a slot="right">发布</a>
+      
+      <svg class="header-release-icon" aria-hidden="true" slot="right" @click="jumpTo('release')" >
+        <use :xlink:href="'#icon-fabu5'"></use>
+      </svg>
     </x-header>
   </div>
 </template>
@@ -21,7 +26,7 @@ export default {
   },
   methods: {
     jumpTo: function(url) {
-      this.$router.push({ name: url });
+      this.$router.push({ name: url })
     }
   }
 };
@@ -38,7 +43,18 @@ export default {
 .header-index-icon {
   position: relative;
   top: -5px;
-  left: -3px;
+  left: 3px;
+  width: 2em;
+  height: 2em;
   fill: #fff;
+  cursor: pointer;
+}
+.header-release-icon {
+  position: relative;
+  top: -5px;
+  right: 3px;
+  width: 2em;
+  height: 2em;
+  cursor: pointer;
 }
 </style>
