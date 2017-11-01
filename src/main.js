@@ -4,10 +4,14 @@ import Vue from 'vue'
 import FastClick from 'fastclick'
 import App from './App'
 import router from './router'
+import axios from 'axios'    // axios
+
 import { Upload, Button, Dialog } from 'element-ui'
 import 'element-ui/lib/theme-default/index.css'
 import { WechatPlugin } from 'vux'
 
+
+Vue.use(axios)
 Vue.use(Upload)
 Vue.use(Button)
 Vue.use(Dialog)

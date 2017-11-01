@@ -9,6 +9,7 @@
       </tab>
 
       <!-- step swiper -->
+      
       <swiper class="step-swiper" v-model="activeStepIndex" height="350px" :min-moving-distance="999" :show-dots="false">
         <swiper-item>
           <div class="tab-swiper">
@@ -43,7 +44,7 @@
           <div class="tab-swiper">
             <div class="tab-swiper">
               <group>
-                <x-textarea title="自我介绍" placeholder="（可选）请填写自我介绍" :show-counter="false" :rows="4"></x-textarea>
+                <x-textarea v-model="selfIntroduce" title="自我介绍" placeholder="（可选）请填写自我介绍" :show-counter="false" :rows="4"></x-textarea>
               </group>
               <div class="tool-tip">
                   填写自我介绍可以为有意应聘的人提供更多的信息
@@ -51,7 +52,12 @@
 
               <group title="上传图像">
                 <el-upload
-                  action=""
+                  ref="upload"
+                  :data="edata"
+                  :http-request="upload"
+                  :action="'http://localhost:8080/postrelease'"
+                  :auto-upload="autoUpload"
+                  :file-list="fileList"
                   list-type="picture-card"
                   :on-preview="handlePictureCardPreview"
                   :on-remove="handleRemove">
@@ -83,13 +89,13 @@
               </div>
 
               <div class="protocol">
-                <check-icon class="protocol-check-icon" :value.sync="checked" type="plain"></check-icon>
+                <check-icon class="protocol-check-icon" :value.sync="protocolChecked" type="plain"></check-icon>
                 <a href="#" target="_blank">《用户服务协议》</a>
               </div>
 
               <div class="release-btn">
                 <el-button type="info" @click="previewInfoBoard">预览</el-button>
-                <el-button type="success">发布</el-button>
+                <el-button type="success" @click="release">发布</el-button>
               </div>
               
             </div>
@@ -127,6 +133,8 @@ import {
   CheckIcon
 } from "vux";
 
+import axios from "axios";
+
 const list = () => ["必填信息", "附加信息", "发布 / 预览"];
 
 export default {
@@ -160,7 +168,12 @@ export default {
       wechat: "",
       phone: "",
 
-      checked: false,
+      selfIntroduce: "",
+      autoUpload: false,
+      fileList: [],
+      edata: {},
+
+      protocolChecked: false,
 
       dialogImageUrl: "",
       dialogVisible: false
@@ -181,6 +194,92 @@ export default {
     }
   },
   methods: {
+    upload: function(upload) {
+      console.log("fuckfuckfuck", upload.file);
+      let formData = new FormData();
+      // let postRelease = {
+      //   user: "iwkkdsikls",
+      //   title: this.title,
+      //   content: this.detailInfo,
+      //   description: this.detailInfo,
+      //   reward: this.money,
+      //   phone: this.phone,
+      //   email: "xxxxx@163.com",
+      //   selfIntroduce: this.selfIntroduce
+      // };
+      formData.append("phone", this.phone);
+      formData.append("file", upload.file)
+      axios({
+        method: "post",
+        url: "http://localhost:8080/postrelease", // 开发环境中使用代理 解决跨域问题
+        data: formData
+      })
+        .then(function(response) {
+          alert(response)
+        })
+        .catch(function(error) {
+          console.log(error);
+        });
+      // axios
+      //   .post("http://localhost:8080/postrelease", formData, {
+      //     headers: { "Content-Type": "multipart/form-data" }
+      //   })
+      //   .then(function(response) {
+      //     response;
+      //   })
+      //   .catch(function(error) {
+      //     console.log(error);
+      //   });
+    },
+    release: function() {
+      if (!this.check()) {
+        return;
+      }
+      console.log("files", this.fileList);
+      // let formData = new FormData();
+      // let postRelease = {
+      //   user: "iwkkdsikls",
+      //   title: this.title,
+      //   content: this.detailInfo,
+      //   description: this.detailInfo,
+      //   reward: this.money,
+      //   phone: this.phone,
+      //   email: "xxxxx@163.com",
+      //   selfIntroduce: this.selfIntroduce
+      // };
+      // formData.append("user", "iwkkdsikls");
+      // formData.append("title", this.title);
+      // formData.append("content", this.detailInfo);
+      // formData.append("description", this.detailInfo);
+      // formData.append("reward", this.money);
+      // formData.append("phone", this.phone);
+      // formData.append("email", "xxxxx@163.com");
+      // formData.append("selfIntroduce", this.selfIntroduce);
+      // formData.append("file", this.files);
+      console.log(this.fileList[0]);
+      this.edata = {
+        user: "iwkkdsikls",
+        title: this.title,
+        content: this.detailInfo,
+        description: this.detailInfo,
+        reward: this.money,
+        phone: this.phone,
+        email: "xxxxx@163.com",
+        selfIntroduce: this.selfIntroduce
+      };
+      this.$refs.upload.submit();
+      axios;
+      // axios
+      //   .post("http://localhost:8080/postrelease", formData, {
+      //     headers: { "Content-Type": "multipart/form-data" }
+      //   })
+      //   .then(function(response) {
+      //     response;
+      //   })
+      //   .catch(function(error) {
+      //     console.log(error);
+      //   });
+    },
     nextStep: function() {
       if (!this.check()) {
         return;
@@ -189,10 +288,6 @@ export default {
       this.stepDisabled[this.activeStepIndex] = false;
     },
     prevStep: function() {
-      if (!this.check()) {
-        return;
-      }
-      this.check();
       --this.activeStepIndex;
     },
     check: function() {
@@ -215,7 +310,18 @@ export default {
 
       // 提交前最后一次检查
       if (this.activeStepIndex === 2) {
-        return true;
+        var checkReleaseBasicInfoResult = this.checkReleaseBasicInfo(); // 新本信息检查
+        if (checkReleaseBasicInfoResult.status === "success") {
+          if (this.protocolChecked) {
+            return true;
+          } else {
+            this.showWarnMsg = true;
+            this.warnMsg = "请确认协议";
+          }
+        } else {
+          this.showWarnMsg = true;
+          this.warnMsg = checkResult.failMsg;
+        }
       }
     },
     checkReleaseBasicInfo: function() {
