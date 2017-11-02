@@ -1,107 +1,108 @@
 <template>
   <div class="form-step">
 
-      <!-- step tab -->
-      <tab :line-width="2" bar-active-color="#668599" v-model="activeStepIndex">
-        <tab-item :disabled="stepDisabled[index]" :active-class="'active-' + (index + 1)" class="vux-center" :selected="activeStepIndex === index" v-for="(item, index) in stepTabs" @click="activeStepIndex = index" :key="index">
-          {{ item }}
-        </tab-item>
-      </tab>
+    <!-- step tab -->
+    <tab :line-widths="2" bar-active-color="#668599" v-model="activeStepIndex">
+      <tab-item :disabled="stepDisabled[index]" :active-class="'active-' + (index + 1)" class="vux-center" :selected="activeStepIndex === index" v-for="(item, index) in stepTabs" @click="activeStepIndex = index" :key="index">
+        {{ item }}
+      </tab-item>
+    </tab>
 
-      <!-- step swiper -->
-      
-      <swiper class="step-swiper" v-model="activeStepIndex" height="350px" :min-moving-distance="999" :show-dots="false">
-        <swiper-item>
-          <div class="tab-swiper">
-             <div class="tab-swiper">
-            <group gutter="0.1em" label-width="4.5em" label-margin-right="2em" label-align="left">
-              <x-input title="标题" placeholder="请填写标题" v-model="title"></x-input>
-              <x-input title="感谢金" placeholder="请输入感谢金" v-model="money"></x-input>
-              <div class="tool-tip">
-                建议输入 200 以上金额
-              </div>
-              <x-textarea title="详细信息" placeholder="请填写详细信息" :show-counter="false" :rows="4" v-model="detailInfo"></x-textarea>
-              <div class="tool-tip">
-                请填写招聘详细要求，如公司、职位、薪酬、职位技能要求等...
-              </div>
-              <x-input title="手机号" placeholder="请输入手机号" v-model="phone"></x-input>
-              <div class="tool-tip">
-                请输入招聘联系电话，便于揭榜者和中标者联系
-              </div>
-              <x-switch title="使用号"></x-switch>
-            </group>
-
-            <div class="instruction">
-                注意事项注意事项注意事项注意事项注意事项注意事项注意事项注意事项注意事项注意事项
-                注意事项注意事项注意事项注意事项注意事项注意事项注意事项注意事项注意事项注意事项
-                注意事项注意事项注意事项注意事项注意事项注意事项注意事项注意事项注意事项注意事项
-              </div>
-          </div>
-          </div>
-        </swiper-item>
-
-        <swiper-item>
-          <div class="tab-swiper">
+    <!-- step swiper -->
+    
+    <!-- 基本信息 -->
+    <swiper class="step-swiper" v-model="activeStepIndex" height="350px" :min-moving-distance="999" :show-dots="false">
+      <swiper-item>
+        <div class="tab-swiper">
             <div class="tab-swiper">
-              <group>
-                <x-textarea v-model="selfIntroduce" title="自我介绍" placeholder="（可选）请填写自我介绍" :show-counter="false" :rows="4"></x-textarea>
-              </group>
-              <div class="tool-tip">
-                  填写自我介绍可以为有意应聘的人提供更多的信息
-              </div>
-
-              <group title="上传图像">
-                <el-upload
-                  ref="upload"
-                  :data="edata"
-                  :http-request="upload"
-                  :action="'http://localhost:8080/postrelease'"
-                  :auto-upload="autoUpload"
-                  :file-list="fileList"
-                  list-type="picture-card"
-                  :on-preview="handlePictureCardPreview"
-                  :on-remove="handleRemove">
-                  <i class="el-icon-plus"></i>
-                </el-upload>
-                <el-dialog v-model="dialogVisible" size="tiny">
-                  <img width="100%" :src="dialogImageUrl" alt="">
-                </el-dialog>
-              </group>
-              <div class="tool-tip">
-                  上传图像
-              </div>
-
+          <group gutter="0.1em" label-width="4.5em" label-margin-right="2em" label-align="left">
+            <x-input title="标题" placeholder="请填写标题" v-model="title"></x-input>
+            <x-input title="感谢金" placeholder="请输入感谢金" v-model="money"></x-input>
+            <div class="tool-tip">
+              建议输入 200 以上金额
             </div>
-          </div>
-        </swiper-item>
+            <x-textarea title="详细信息" placeholder="请填写详细信息" :show-counter="false" :rows="4" v-model="detailInfo"></x-textarea>
+            <div class="tool-tip">
+              请填写招聘详细要求，如公司、职位、薪酬、职位技能要求等...
+            </div>
+            <x-input title="手机号" placeholder="请输入手机号" v-model="phone"></x-input>
+            <div class="tool-tip">
+              请输入招聘联系电话，便于揭榜者和中标者联系
+            </div>
+            <x-switch title="微信号"></x-switch>
+          </group>
 
-        <swiper-item>
+          <div class="instruction">
+              注意事项注意事项注意事项注意事项注意事项注意事项注意事项注意事项注意事项注意事项
+              注意事项注意事项注意事项注意事项注意事项注意事项注意事项注意事项注意事项注意事项
+              注意事项注意事项注意事项注意事项注意事项注意事项注意事项注意事项注意事项注意事项
+            </div>
+        </div>
+        </div>
+      </swiper-item>
+
+      <!-- 额外信息 -->
+      <swiper-item>
+        <div class="tab-swiper">
           <div class="tab-swiper">
-            <div>
-  
-              <div>
-                <div class="instruction-title">注意事项</div>
-                <div class="instruction">
-                  注意事项注意事项注意事项注意事项注意事项注意事项注意事项注意事项注意事项注意事项
-                  注意事项注意事项注意事项注意事项注意事项注意事项注意事项注意事项注意事项注意事项
-                  注意事项注意事项注意事项注意事项注意事项注意事项注意事项注意事项注意事项注意事项
-                </div>
-              </div>
+            <group>
+              <x-textarea v-model="selfIntroduce" title="自我介绍" placeholder="（可选）请填写自我介绍" :show-counter="false" :rows="4"></x-textarea>
+            </group>
+            <div class="tool-tip">
+                填写自我介绍可以为有意应聘的人提供更多的信息
+            </div>
 
-              <div class="protocol">
-                <check-icon class="protocol-check-icon" :value.sync="protocolChecked" type="plain"></check-icon>
-                <a href="#" target="_blank">《用户服务协议》</a>
-              </div>
-
-              <div class="release-btn">
-                <el-button type="info" @click="previewInfoBoard">预览</el-button>
-                <el-button type="success" @click="release">发布</el-button>
-              </div>
-              
+            <group title="上传图像">
+              <el-upload
+                ref="fileUpload"
+                :http-request="handleSubmit"
+                :action="'http://localhost:8080/postrelease'"
+                :auto-upload="autoUpload"
+                list-type="picture-card"
+                :on-preview="handlePictureCardPreview"
+                :on-remove="handleRemove"
+                :on-change="handleChange">
+                
+                <i class="el-icon-plus"></i>
+              </el-upload>
+              <el-dialog v-model="dialogVisible" size="tiny">
+                <img width="100%" :src="dialogImageUrl" alt="">
+              </el-dialog>
+            </group>
+            <div class="tool-tip">
+                上传图像
             </div>
           </div>
-        </swiper-item>
-      </swiper>
+        </div>
+      </swiper-item>
+
+      <!-- 预览 / 发布 -->
+      <swiper-item>
+        <div class="tab-swiper">
+          <div>
+            <div>
+              <div class="instruction-title">注意事项</div>
+              <div class="instruction">
+                注意事项注意事项注意事项注意事项注意事项注意事项注意事项注意事项注意事项注意事项
+                注意事项注意事项注意事项注意事项注意事项注意事项注意事项注意事项注意事项注意事项
+                注意事项注意事项注意事项注意事项注意事项注意事项注意事项注意事项注意事项注意事项
+              </div>
+            </div>
+
+            <div class="protocol">
+              <check-icon class="protocol-check-icon" :value.sync="protocolChecked" type="plain"></check-icon>
+              <a href="#" target="_blank">《用户服务协议》</a>
+            </div>
+
+            <div class="release-btn">
+              <el-button type="info" @click="previewInfoBoard">预览</el-button>
+              <el-button type="success" @click="release">发布</el-button>
+            </div>
+            
+          </div>
+        </div>
+      </swiper-item>
+    </swiper>
 
 
     <!-- prevStep and nextStep button -->
@@ -170,8 +171,9 @@ export default {
 
       selfIntroduce: "",
       autoUpload: false,
+      uploadFileCount: 0,
       fileList: [],
-      edata: {},
+      uploadCount: 0,
 
       protocolChecked: false,
 
@@ -194,70 +196,40 @@ export default {
     }
   },
   methods: {
-    upload: function(upload) {
-      console.log("fuckfuckfuck", upload.file);
-      let formData = new FormData();
-      // let postRelease = {
-      //   user: "iwkkdsikls",
-      //   title: this.title,
-      //   content: this.detailInfo,
-      //   description: this.detailInfo,
-      //   reward: this.money,
-      //   phone: this.phone,
-      //   email: "xxxxx@163.com",
-      //   selfIntroduce: this.selfIntroduce
-      // };
-      formData.append("phone", this.phone);
-      formData.append("file", upload.file)
-      axios({
-        method: "post",
-        url: "http://localhost:8080/postrelease", // 开发环境中使用代理 解决跨域问题
-        data: formData
-      })
-        .then(function(response) {
-          alert(response)
-        })
-        .catch(function(error) {
-          console.log(error);
-        });
-      // axios
-      //   .post("http://localhost:8080/postrelease", formData, {
-      //     headers: { "Content-Type": "multipart/form-data" }
-      //   })
-      //   .then(function(response) {
-      //     response;
-      //   })
-      //   .catch(function(error) {
-      //     console.log(error);
-      //   });
+    handleRemove: function(file, fileList) {
+      this.uploadFileCount = fileList.length;
     },
+    handlePictureCardPreview: function(file) {
+      this.dialogImageUrl = file.url;
+      this.dialogVisible = true;
+    },
+    handleChange: function(file, fileList) {
+      this.uploadFileCount = fileList.length;
+    },
+
+    /** 发布按钮 */
     release: function() {
+      // 发布前数据检查
       if (!this.check()) {
         return;
       }
-      console.log("files", this.fileList);
-      // let formData = new FormData();
-      // let postRelease = {
-      //   user: "iwkkdsikls",
-      //   title: this.title,
-      //   content: this.detailInfo,
-      //   description: this.detailInfo,
-      //   reward: this.money,
-      //   phone: this.phone,
-      //   email: "xxxxx@163.com",
-      //   selfIntroduce: this.selfIntroduce
-      // };
-      // formData.append("user", "iwkkdsikls");
-      // formData.append("title", this.title);
-      // formData.append("content", this.detailInfo);
-      // formData.append("description", this.detailInfo);
-      // formData.append("reward", this.money);
-      // formData.append("phone", this.phone);
-      // formData.append("email", "xxxxx@163.com");
-      // formData.append("selfIntroduce", this.selfIntroduce);
-      // formData.append("file", this.files);
-      console.log(this.fileList[0]);
-      this.edata = {
+      // 提交表单信息
+      this.$refs.fileUpload.submit();
+    },
+
+    /** 在 file upload's htppRequest method 中实现表单提交 */
+    handleSubmit: function(fileUpload) {
+      console.log("fuckfuckfuck", fileUpload.file);
+      ++this.uploadCount;
+      if (this.uploadCount < this.uploadFileCount) {
+        this.fileList.push(fileUpload.file);
+        return;
+      }
+      this.fileList.push(fileUpload.file);
+      console.log("hello,world");
+      let formData = new FormData();
+
+      let postRelease = {
         user: "iwkkdsikls",
         title: this.title,
         content: this.detailInfo,
@@ -267,19 +239,30 @@ export default {
         email: "xxxxx@163.com",
         selfIntroduce: this.selfIntroduce
       };
-      this.$refs.upload.submit();
-      axios;
-      // axios
-      //   .post("http://localhost:8080/postrelease", formData, {
-      //     headers: { "Content-Type": "multipart/form-data" }
-      //   })
-      //   .then(function(response) {
-      //     response;
-      //   })
-      //   .catch(function(error) {
-      //     console.log(error);
-      //   });
+
+      for (let key in postRelease) {
+        formData.append(key, postRelease[key]); // 帖子信息
+      }
+
+      for (var i = 0; i < this.uploadFileCount; i++) {
+        formData.append("files", this.fileList[i]); // 文件
+      }
+
+      // 上传数据
+      axios({
+        method: "post",
+        url: "http://localhost:8080/postrelease",
+        data: formData
+      })
+        .then(function(response) {
+          console.log(response);
+        })
+        .catch(function(error) {
+          console.log(error);
+        });
+      this.fileCount = 0;
     },
+
     nextStep: function() {
       if (!this.check()) {
         return;
@@ -324,6 +307,7 @@ export default {
         }
       }
     },
+
     checkReleaseBasicInfo: function() {
       var phoneReg = /^0{0,1}(13[0-9]|15[0-9]|153|156|18[7-9])[0-9]{8}$/; //手机正则
 
@@ -366,13 +350,6 @@ export default {
     },
     previewInfoBoard: function() {
       this.$router.push({ name: "InfoBoard" });
-    },
-    handleRemove: function(file, fileList) {
-      console.log(file, fileList);
-    },
-    handlePictureCardPreview: function(file) {
-      this.dialogImageUrl = file.url;
-      this.dialogVisible = true;
     }
   }
 };
