@@ -55,7 +55,7 @@
             <group title="上传图像">
               <el-upload
                 ref="fileUpload"
-                :http-request="handleSubmit"
+                :http-request="onSubmit"
                 :action="'http://localhost:8080/postrelease'"
                 :auto-upload="autoUpload"
                 list-type="picture-card"
@@ -104,6 +104,7 @@
       </swiper-item>
     </swiper>
 
+    
 
     <!-- prevStep and nextStep button -->
     <div class="prev-step-btn">
@@ -113,7 +114,13 @@
       <x-button :disabled="nextStepDisabled" @click.native="nextStep" type="primary">下一步</x-button>
     </div>
     
+    <!-- 操作信息提示 -->
     <toast v-model="showWarnMsg" type="warn">{{ warnMsg }}</toast>
+
+    <!-- 加载动画 -->
+    <div v-transfer-dom>
+      <loading :show="loadingShow" :text="loadingText"></loading>
+    </div>
 
   </div>
 </template>
@@ -131,7 +138,9 @@ import {
   Swiper,
   SwiperItem,
   Toast,
-  CheckIcon
+  CheckIcon,
+  Loading,
+  TransferDomDirective as TransferDom
 } from "vux";
 
 import axios from "axios";
@@ -139,6 +148,9 @@ import axios from "axios";
 const list = () => ["必填信息", "附加信息", "发布 / 预览"];
 
 export default {
+  directives: {
+    TransferDom
+  },
   components: {
     Tab,
     TabItem,
@@ -151,7 +163,8 @@ export default {
     XInput,
     XTextarea,
     XSwitch,
-    CheckIcon
+    CheckIcon,
+    Loading
   },
   data() {
     return {
@@ -178,7 +191,10 @@ export default {
       protocolChecked: false,
 
       dialogImageUrl: "",
-      dialogVisible: false
+      dialogVisible: false,
+
+      loadingShow: false,
+      loadingText: "发布中"
     };
   },
   watch: {
@@ -216,17 +232,25 @@ export default {
       // 提交表单信息
       this.$refs.fileUpload.submit();
     },
-
+    onSubmit: function(fileUpload) {
+      this.handleSubmit(
+        fileUpload,
+        this.releaseSuccessCallBack,
+        this.releaseFailCallBack
+      );
+    },
     /** 在 file upload's htppRequest method 中实现表单提交 */
-    handleSubmit: function(fileUpload) {
-      console.log("fuckfuckfuck", fileUpload.file);
+    handleSubmit: function(
+      fileUpload,
+      releaseSuccessCallBack,
+      releaseFailCallBack
+    ) {
       ++this.uploadCount;
       if (this.uploadCount < this.uploadFileCount) {
         this.fileList.push(fileUpload.file);
         return;
       }
       this.fileList.push(fileUpload.file);
-      console.log("hello,world");
       let formData = new FormData();
 
       let postRelease = {
@@ -247,7 +271,7 @@ export default {
       for (var i = 0; i < this.uploadFileCount; i++) {
         formData.append("files", this.fileList[i]); // 文件
       }
-
+      this.loadingShow = true;
       // 上传数据
       axios({
         method: "post",
@@ -255,12 +279,39 @@ export default {
         data: formData
       })
         .then(function(response) {
-          console.log(response);
+          releaseSuccessCallBack(response);
         })
         .catch(function(error) {
-          console.log(error);
+          releaseFailCallBack(error);
         });
-      this.fileCount = 0;
+      this.uploadCount = 0; // 置 0 可以继续提交
+    },
+    releaseSuccessCallBack: function(response) {
+      this.loadingShow = false;
+      console.log(response);
+      if (response.data.identifyId != null && response.data.identifyId != undefined) {
+        this.$router.push({
+          name: "release-result",
+          params: {
+            title: "发布成功!",
+            description: "招聘帖子已经发布",
+            iconType: "success"
+          }
+        });
+      }
+    },
+    releaseFailCallBack: function(error) {
+      this.$router.push({
+          name: "release-result",
+          params: {
+            title: "发布失败!",
+            description: "发现错误，请尝试重新提交",
+            iconType: "warn"
+          }
+        });
+      console.log("############################");
+      console.log(error);
+      console.log("############################");
     },
 
     nextStep: function() {

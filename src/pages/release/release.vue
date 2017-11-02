@@ -8,16 +8,15 @@
       <form-step></form-step>
     </div>
     
-
     <!-- bottom-tab-bar -->
     <bottom-tab-bar></bottom-tab-bar>
   </div>
 </template>
 
 <script scoped>
-import HeaderIndex from "@/components/common/HeaderIndex";
-import FormStep from "@/components/formStep/FormStep";
-import BottomTabBar from "@/components/common/BottomTabBar";
+import HeaderIndex from "@/components/common/HeaderIndex"
+import FormStep from "@/components/formStep/FormStep"
+import BottomTabBar from "@/components/common/BottomTabBar"
 
 export default {
   components: {

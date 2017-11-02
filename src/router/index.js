@@ -5,6 +5,7 @@ import Preview from '@/components/Preview'
 import InfoBoard from '@/pages/info-board'
 import Index from '@/pages/index/index'
 import Release from '@/pages/release/release'
+import ReleaseResult from '@/pages/release/release-result'
 import Mine from '@/pages/mine/mine'
 import MyInfo from '@/pages/mine/my-info'
 import MyRelease from '@/pages/mine/my-release'
@@ -36,6 +37,11 @@ export default new VueRouter({
       path: '/release',
       name: 'release',
       component: Release
+    },
+    {
+      path: '/release/result',
+      name: 'release-result',
+      component: ReleaseResult
     },
     {
       path: '/mine',
