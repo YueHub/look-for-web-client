@@ -6,11 +6,11 @@
     <!-- mine cell list -->
     <div class="mine-cell-list">
       <group>
-        <cell :title="('89_117_101')" is-link>
+        <cell :title="userName" is-link>
           <img slot="icon" width="50" class="user-avatar" src="">
         </cell>
-        <cell :title="('人气值')" @click.native="onClick" :is-loading="!money" :value="money"></cell>
-        <cell :title="('信用等级')" @click.native="onClick" :is-loading="!money" :value="money"></cell>
+        <cell :title="('人气值')" @click.native="onClick" :is-loading="!popularityValue" :value="popularityValue"></cell>
+        <cell :title="('信用等级')" @click.native="onClick" :is-loading="!creditValue" :value="creditValue"></cell>
       </group>
 
       <group>
@@ -41,6 +41,7 @@
 
 <script>
 import { Cell, CellBox, CellFormPreview, Group, Badge } from "vux";
+import axios from "axios";
 
 import HeaderIndex from "@/components/common/HeaderIndex";
 import BottomTabBar from "@/components/common/BottomTabBar";
@@ -55,18 +56,9 @@ export default {
     "header-index": HeaderIndex,
     "bottom-tab-bar": BottomTabBar
   },
-  mounted() {
-    setTimeout(() => {
-      this.money = -1024;
-    }, 2000);
-  },
-  methods: {
-    onClick() {
-      // console.log('on click')
-    }
-  },
   data() {
     return {
+      userName: '',
       list: [
         {
           label: "Apple",
@@ -81,8 +73,38 @@ export default {
           value: "8.00"
         }
       ],
-      money: null
+      popularityValue: null, // 人气值
+      creditValue: null // 信用值
     };
+  },
+  mounted() {
+    var getUserInfoSuccess = this.getUserInfoSuccess;
+    var getUserInfoFail = this.getUserInfoFail;
+    axios({
+      method: "get",
+      url: "http://localhost:8080/user/iwkkdsikls"
+    })
+      .then(function(response) {
+        getUserInfoSuccess(response);
+      })
+      .catch(function(error) {
+        getUserInfoFail(error);
+      });
+  },
+  methods: {
+    onClick() {
+      // console.log('on click')
+    },
+    getUserInfoSuccess: function(response) {
+      let result = response.data.result
+      this.userName = result.identifyId
+      this.popularityValue = result.popularityValue
+      this.creditValue = result.creditValue
+
+    },
+    getUserInfoFail: function(error) {
+      console.log(error);
+    }
   }
 };
 </script>

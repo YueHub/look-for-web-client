@@ -79,14 +79,15 @@ export default {
           meta: {
             source: "来源信息",
             date: "",
-            other: "其他信息"
+            other: "其他信息",
           }
         };
         post.title = result[i].title;
         post.desc = result[i].description;
         post.src += result[i].postImgUrls.split(",")[0]
+        post.meta.source = result[i].releaseUserId
         post.meta.date = result[i].releaseTime;
-        console.log(post.src)
+        post.meta.other = "奖金" + result[i].reward
         this.postList.push(post);
       }
       console.log(response);
