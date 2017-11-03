@@ -77,7 +77,7 @@ export default {
           desc: "",
           url: "/infoboard",
           meta: {
-            source: "来源信息",
+            source: "",
             date: "",
             other: "其他信息",
           }
