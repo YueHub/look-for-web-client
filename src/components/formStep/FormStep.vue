@@ -143,7 +143,7 @@ import {
   TransferDomDirective as TransferDom
 } from "vux";
 
-import axios from "axios";
+import { mapState, mapMutations, mapActions } from 'vuex'
 
 const list = () => ["必填信息", "附加信息", "发布 / 预览"];
 
@@ -211,7 +211,12 @@ export default {
       }
     }
   },
+  computed: {
+    ...mapState(['releasePostInfo', 'releaseStatus'])
+  },
   methods: {
+    ...mapMutations(['updateReleasePostInfo']),
+    ...mapActions(['addPost']),
     handleRemove: function(file, fileList) {
       this.uploadFileCount = fileList.length;
     },
@@ -240,11 +245,7 @@ export default {
       );
     },
     /** 在 file upload's htppRequest method 中实现表单提交 */
-    handleSubmit: function(
-      fileUpload,
-      releaseSuccessCallBack,
-      releaseFailCallBack
-    ) {
+    handleSubmit: function(fileUpload) {
       ++this.uploadCount;
       if (this.uploadCount < this.uploadFileCount) {
         this.fileList.push(fileUpload.file);
@@ -272,24 +273,31 @@ export default {
         formData.append("files", this.fileList[i]); // 文件
       }
       this.loadingShow = true;
-      // 上传数据
-      axios({
-        method: "post",
-        url: "http://localhost:8080/postrelease",
-        data: formData
+
+      this.updateReleasePostInfo({
+        type: "updateReleasePostInfo",
+        releasePostInfo: formData
       })
-        .then(function(response) {
-          releaseSuccessCallBack(response);
-        })
-        .catch(function(error) {
-          releaseFailCallBack(error);
-        });
+
+      // 上传数据
+      // axios({
+      //   method: "post",
+      //   url: "http://localhost:8080/postrelease",
+      //   data: formData
+      // })
+      //   .then(function(response) {
+      //     releaseSuccessCallBack(response);
+      //   })
+      //   .catch(function(error) {
+      //     releaseFailCallBack(error);
+      //   });
+      this.addPost().then(this.releaseSuccessCallBack, this.releaseFailCallBack)
       this.uploadCount = 0; // 置 0 可以继续提交
     },
     releaseSuccessCallBack: function(response) {
       this.loadingShow = false;
       console.log(response);
-      if (response.data.identifyId != null && response.data.identifyId != undefined) {
+      if (this.releaseStatus === 'success') {
         this.$router.push({
           name: "release-result",
           params: {

@@ -37,9 +37,9 @@ const state = {
   creditValue: null, // 用户信用值
 
   posts: null,  // 大厅帖子
-  releaseInfo: {  // 填写的发布信息
-    
-  },
+  releasePostInfo: null,  // 填写的发布信息
+  releaseStatus: null, // 帖子发布操作状态
+
   myReleases: null,  // 用户发布的帖子
 
   myViews: null,  // 用户浏览过的帖子
@@ -55,7 +55,6 @@ const mutations = {
   updatePosts: function (state, posts) {
     state.posts = posts
   },
-
   // 更新用户相关信息
   updateUserInfo: function (state, userInfo) {
     state.userName = userInfo.identifyId;
@@ -81,6 +80,20 @@ const mutations = {
   // 更新用户中标的帖子
   updateMyWins: function (state, payload) {
     state.myWins = payload.myWins
+  },
+  // 更新发布相关信息
+  updateReleasePostInfo: function (state, payload) {
+    state.releasePostInfo = payload.releasePostInfo
+  },
+  // 更新发布相关状态和信息
+  updateRelease: function (state, result) {
+    result
+    // if (result.... === success) 如果返回添加成功
+    state.releasePostInfo = null  // 重置填写的发布信息
+    state.releaseStatus = 'success' // 设置发布状态为成功
+
+    // if (result === error) 如果返回添加操作失败
+    // state.releaseStatus = 'error' 设置发布状态为失败
   }
 }
 
@@ -131,6 +144,30 @@ const actions = {
         });
     })
   },
+
+  /**
+   * 用户发布帖子
+   */
+  addPost: function ({commit, state}) {
+    return new Promise((resolve, reject) => {
+      if (state.releasePostInfo === null) {
+        return;
+      }
+      axios({
+        method: "post",
+        url: "http://localhost:8080/postrelease",
+        data: state.releasePostInfo
+      })
+        .then(function(response) {
+          let result = response.data.result
+          commit('updateRelease', result)
+          resolve(result)
+        })
+        .catch(function(error) {
+          reject(error)
+        });
+    })
+  }
 
 }
 
