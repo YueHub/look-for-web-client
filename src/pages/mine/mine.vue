@@ -21,10 +21,10 @@
           </span>
         </cell>
 
-        <cell :title="'我看过的'" is-link :link="{ path: '/mywatch' }">
+        <cell :title="'我看过的'" is-link :link="{ path: '/myview' }">
 
         </cell>
-        <cell :title="'我揭榜的'" is-link :link="{ path: '/mycompete' }">
+        <cell :title="'我揭榜的'" is-link :link="{ path: '/myuncover' }">
 
         </cell>
         <cell :title="'帮助'" is-link :link="{ path: '/help' }">

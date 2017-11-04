@@ -9,8 +9,8 @@ import ReleaseResult from '@/pages/release/release-result'
 import Mine from '@/pages/mine/mine'
 import MyInfo from '@/pages/mine/my-info'
 import MyRelease from '@/pages/mine/my-release'
-import MyWatch from '@/pages/mine/my-watch'
-import MyCompete from '@/pages/mine/my-compete'
+import MyView from '@/pages/mine/my-view'
+import MyUncover from '@/pages/mine/my-uncover'
 import Help from '@/pages/mine/help'
 import AboutUs from '@/pages/mine/about-us'
 
@@ -59,14 +59,14 @@ export default new VueRouter({
       component: MyRelease
     },
     {
-      path: '/mywatch',
-      name: 'mywatch',
-      component: MyWatch
+      path: '/myview',
+      name: 'myview',
+      component: MyView
     },
     {
-      path: '/mycompete',
-      name: 'mycompete',
-      component: MyCompete
+      path: '/myuncover',
+      name: 'myuncover',
+      component: MyUncover
     },
     {
       path: '/help',
