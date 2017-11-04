@@ -58,7 +58,7 @@ export default {
         post.title = this.myViews[i].title;
         post.desc = this.myViews[i].description;
         post.src += this.myViews[i].postImgUrls.split(",")[0];
-        // post.meta.source = this.myReleases[i].releaseUserId;
+        // post.meta.source = this.myViews[i].releaseUserId;
         post.meta.date = this.myViews[i].releaseTime;
         post.meta.other = "奖金" + this.myViews[i].reward;
         postList.push(post);
