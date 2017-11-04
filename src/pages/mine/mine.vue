@@ -44,8 +44,7 @@
 
 <script>
 import { Cell, CellBox, CellFormPreview, Group, Badge } from "vux";
-// import { mapMutations } from "vuex";
-// import axios from "axios";
+import { mapState, mapActions } from "vuex";
 
 import HeaderIndex from "@/components/common/HeaderIndex";
 import BottomTabBar from "@/components/common/BottomTabBar";
@@ -62,7 +61,6 @@ export default {
   },
   data() {
     return {
-      userName: "",
       list: [
         {
           label: "Apple",
@@ -77,18 +75,26 @@ export default {
           value: "8.00"
         }
       ],
-      popularityValue: null, // 人气值
-      creditValue: null // 信用值
     };
   },
   mounted() {
-
+    this.getUserInfo().then(this.getUserInfoSuccess, this.getUserInfoFail)
+  },
+  computed: {
+    ...mapState(['userName', 'popularityValue', 'creditValue']),
   },
   methods: {
+    ...mapActions(['getUserInfo']),
     onImgError(item, $event) {
       $event;
-      // console.log(item, $event)
     },
+    getUserInfoSuccess: function (response) {
+
+      console.log(response)
+    },
+    getUserInfoFail: function (error) {
+      console.log(error)
+    }
   }
 };
 </script>

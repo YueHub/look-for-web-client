@@ -26,7 +26,7 @@
 
 <script scoped>
 import { Scroller, Spinner, Panel } from "vux";
-import axios from "axios";
+import { mapState, mapActions } from 'vuex';
 import HeaderIndex from "@/components/common/HeaderIndex";
 import BottomTabBar from "@/components/common/BottomTabBar";
 
@@ -52,24 +52,19 @@ export default {
   },
   mounted() {
     // 挂载后异步调用后台接口获取 list
-    var getPostSuccess = this.getPostSuccess;
-    var getPostFail = this.getPostFail;
-    axios({
-      method: "get",
-      url: "http://localhost:8080/postrelease?status=1"
-    })
-      .then(function(response) {
-        getPostSuccess(response);
-      })
-      .catch(function(error) {
-        getPostFail(error);
-      });
+    this.getPosts().then(this.getPostSuccess, this.getPostFail)
+  },
+  computed: {
+    ...mapState(['posts'])
   },
   methods: {
+    ...mapActions(['getPosts']),
     getPostSuccess: function(response) {
-      let result = response.data.result;
+      if (this.posts === null) {
+        return;
+      }
 
-      for (let i = 0; i < result.length; i++) {
+      for (let i = 0; i < this.posts.length; i++) {
         let post = {
           src: "http://localhost:8080/image/",
           fallbackSrc: "/static/imgs/404-img.png",
@@ -82,12 +77,12 @@ export default {
             other: "其他信息",
           }
         };
-        post.title = result[i].title;
-        post.desc = result[i].description;
-        post.src += result[i].postImgUrls.split(",")[0]
-        post.meta.source = result[i].releaseUserId
-        post.meta.date = result[i].releaseTime;
-        post.meta.other = "奖金" + result[i].reward
+        post.title = this.posts[i].title;
+        post.desc = this.posts[i].description;
+        post.src += this.posts[i].postImgUrls.split(",")[0]
+        post.meta.source = this.posts[i].releaseUserId
+        post.meta.date = this.posts[i].releaseTime;
+        post.meta.other = "奖金" + this.posts[i].reward
         this.postList.push(post);
       }
       console.log(response);

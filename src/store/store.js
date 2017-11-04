@@ -6,7 +6,6 @@ Vue.use(Vuex)
 
 const state = {
   platform: 1, // 平台
-  userId: 'iwkkdsikls', // 用户 Id
   bottomTabBarItems: [  // 底部导航栏
     {
       name: 'index',
@@ -32,6 +31,12 @@ const state = {
     release: '0',
     mine: '1'
   },
+  userId: 'iwkkdsikls', // 用户 Id
+  userName: null, // 用户名
+  popularityValue: null, // 用户人气值
+  creditValue: null, // 用户信用值
+
+  posts: null,  // 大厅帖子
   releaseInfo: {  // 填写的发布信息
     
   },
@@ -46,12 +51,17 @@ const state = {
 }
 
 const mutations = {
+  // 更新大厅帖子信息
+  updatePosts: function (state, posts) {
+    state.posts = posts
+  },
+
   // 更新用户相关信息
   updateUserInfo: function (state, userInfo) {
-    // this.userName = result.identifyId;
-    // this.popularityValue = result.popularityValue;
-    // this.creditValue = result.creditValue;
-
+    state.userName = userInfo.identifyId;
+    state.popularityValue = userInfo.popularityValue;
+    state.creditValue = userInfo.creditValue;
+    console.log('hello,world', state.userName)
     state.myReleases = userInfo.postReleases
     state.myViews = userInfo.postViews
     state.myUncovers = userInfo.postUncovers
@@ -80,6 +90,28 @@ const actions = {
    * getUserId
    */
 
+
+
+  /**
+   * 获取大厅帖子信息
+   */
+  getPosts: function ({commit}) {
+    return new Promise((resolve, reject) => {
+      axios({
+        method: "get",
+        url: "http://localhost:8080/postrelease?status=1"
+      })
+        .then(function(response) {
+          let posts = response.data.result
+          commit('updatePosts', posts)
+          resolve(posts)
+        })
+        .catch(function(error) {
+          reject(error)
+        });
+    })
+  },
+
   /**
    * 获取用户信息
    */
@@ -100,13 +132,6 @@ const actions = {
     })
   },
 
-  /**
-   * 获取大厅帖子信息
-   */
-  getPosts: function ({commit, state}) {
-    commit
-    state
-  }
 }
 
 export default new Vuex.Store({

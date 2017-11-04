@@ -26,10 +26,8 @@ export default {
   computed: {
     ...mapState(["myReleases"])
   },
-  created() {
-    console.log('sdfdsf')
-    this.getUserInfo().then(this.getUserInfoSuccess)
-    
+  mounted() {
+    this.getUserInfo().then(this.getUserInfoSuccess, this.getUserInfoFail)
   },
   methods: {
     ...mapActions(['getUserInfo']),
