@@ -255,7 +255,7 @@ export default {
       let formData = new FormData();
 
       let postRelease = {
-        user: "iwkkdsikls",
+        user: "1",
         title: this.title,
         content: this.detailInfo,
         description: this.detailInfo,

@@ -31,7 +31,7 @@ const state = {
     release: '0',
     mine: '1'
   },
-  userId: 'iwkkdsikls', // 用户 Id
+  userId: '1', // 用户 Id
   userName: null, // 用户名
   popularityValue: null, // 用户人气值
   creditValue: null, // 用户信用值
@@ -46,7 +46,13 @@ const state = {
 
   myUncovers: null,  // 用户揭榜的帖子
 
-  myWins: null // 用户中标的帖子
+  myWins: null, // 用户中标的帖子
+
+  forwards: null, // 用户转发图
+
+  shareStatus: null, // 分享转发状态
+
+  shareUrl: null, // 分享转发后链接
 
 }
 
@@ -60,7 +66,6 @@ const mutations = {
     state.userName = userInfo.identifyId;
     state.popularityValue = userInfo.popularityValue;
     state.creditValue = userInfo.creditValue;
-    console.log('hello,world', state.userName)
     state.myReleases = userInfo.postReleases
     state.myViews = userInfo.postViews
     state.myUncovers = userInfo.postUncovers
@@ -94,6 +99,11 @@ const mutations = {
 
     // if (result === error) 如果返回添加操作失败
     // state.releaseStatus = 'error' 设置发布状态为失败
+  },
+  // 更新分享状态
+  updateShare: function (state, result) {
+    state.forwards = result.forwards  // 更新用户转发图
+    state.shareUrl = result.shareUrl  // 更新转发链接
   }
 }
 
@@ -162,6 +172,62 @@ const actions = {
           let result = response.data.result
           commit('updateRelease', result)
           resolve(result)
+        })
+        .catch(function(error) {
+          reject(error)
+        });
+    })
+  },
+
+  /**
+   * 分享转发帖子
+   */
+  sharePost: function({commit}, userInfo) {
+    return new Promise((resolve, reject) => {
+      // TODO 调用微信 JSSDK 进行转发分享
+      
+      axios({
+        method: "post",
+        url: "http://localhost:8080/postforward/forward",
+        data: {
+          postId: userInfo.postId,
+          startUserId: userInfo.startUserId,
+          endUserId: userInfo.endUserId
+        }
+      })
+        .then(function(response) {
+          let result = {}
+          console.log('分享后路径')
+          var shareUrl = 'http://localhost:8080/postforward/forward?postId=' + userInfo.postId
+          shareUrl += ' && startUserId = ' + userInfo.startUserId
+          shareUrl += ' && endUserId = ' + userInfo.endUserId
+          result.shareUrl = shareUrl
+          result.forwards = []
+          console.log(shareUrl)
+    
+          // .then 
+          commit('updateShare', result)
+          resolve(response);
+        })
+        .catch(function(error) {
+          reject(error)
+        });
+    })
+  },
+
+  /**
+   * 获取用户转发路径
+   */
+  getSharePath: function ({commit}, userInfo) {
+    return new Promise((resolve, reject) => {
+      axios({
+        method: "get",
+        url: "http://localhost:8080/postforward/" + userInfo.postId + "/" + userInfo.startUserId + "/" + userInfo.endUserId
+      })
+        .then(function(response) {
+          let userInfo = response.data;
+          // commit('updateUserInfo', userInfo);
+          resolve(userInfo)
         })
         .catch(function(error) {
           reject(error)

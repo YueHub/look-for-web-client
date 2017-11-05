@@ -7,7 +7,7 @@
     <div class="list-scroller">
       <scroller lock-x scrollbar-y use-pullup use-pulldown @on-pullup-loading="loadMore" @on-pulldown-loading="refresh" v-model="status" ref="scroller">
         <div>
-          <panel v-for="i in n" :key="i.id" :header="'众寻列表'" :list="postList" :type="'5'" @on-img-error="onImgError"></panel>
+          <panel :header="'众寻列表'" :list="postList" :type="'5'" @on-img-error="onImgError"></panel>
         </div>
         <!--pullup slot-->
         <div slot="pullup" class="xs-plugin-pullup-container xs-plugin-pullup-up" style="position: absolute; width: 100%; height: 40px; bottom: -40px; text-align: center;">
@@ -70,7 +70,7 @@ export default {
           fallbackSrc: "/static/imgs/404-img.png",
           title: "",
           desc: "",
-          url: "/infoboard",
+          url: "/infoboard?postId=" + this.posts[i].identifyId,
           meta: {
             source: "",
             date: "",
