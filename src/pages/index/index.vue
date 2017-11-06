@@ -5,9 +5,9 @@
     
     <!-- acticle list panel -->
     <div class="list-scroller">
-      <scroller lock-x scrollbar-y use-pullup use-pulldown @on-pullup-loading="loadMore" @on-pulldown-loading="refresh" v-model="status" ref="scroller">
+      <scroller lock-x scrollbar-y use-pullup use-pulldown :pulldown-config="pulldownConfig" @on-pulldown-loading="refresh" @on-pullup-loading="loadMore" v-model="status" ref="scroller">
         <div>
-          <panel :header="'众寻列表'" :list="postList" :type="'5'" @on-img-error="onImgError"></panel>
+          <panel :header="'众寻列表'" :list="postList.slice(0, showListSize)" :type="'5'" @on-img-error="onImgError"></panel>
         </div>
         <!--pullup slot-->
         <div slot="pullup" class="xs-plugin-pullup-container xs-plugin-pullup-up" style="position: absolute; width: 100%; height: 40px; bottom: -40px; text-align: center;">
@@ -18,7 +18,6 @@
       </scroller>
     </div>
 
-
     <!-- bottom tab bar -->
     <bottom-tab-bar></bottom-tab-bar>
   </div>
@@ -26,7 +25,7 @@
 
 <script scoped>
 import { Scroller, Spinner, Panel } from "vux";
-import { mapState, mapActions } from 'vuex';
+import { mapState, mapActions } from "vuex";
 import HeaderIndex from "@/components/common/HeaderIndex";
 import BottomTabBar from "@/components/common/BottomTabBar";
 
@@ -40,9 +39,17 @@ export default {
   },
   data() {
     return {
+      pulldownConfig: {
+        content: "下拉刷新",
+        height: 60,
+        autoRefresh: false,
+        downContent: "下拉刷新",
+        upContent: "放手...",
+        loadingContent: "加载中...",
+        clsPrefix: "xs-plugin-pulldown-"
+      },
       postList: [], // 帖子列表
-      n: 10,
-      n1: 10,
+      showListSize: 10,
       pullupEnabled: true,
       status: {
         pullupStatus: "default",
@@ -52,14 +59,26 @@ export default {
   },
   mounted() {
     // 挂载后异步调用后台接口获取 list
-    this.getPosts().then(this.getPostSuccess, this.getPostFail)
+    this.getPosts().then(this.getPostsSuccess, this.getPostsFail);
+    if (this.showListSize < this.postList.length) {
+      this.changePullupStatus(true)
+    } else {
+      this.changePullupStatus(false)
+    }
   },
   computed: {
-    ...mapState(['posts'])
+    ...mapState(["posts"])
   },
   methods: {
-    ...mapActions(['getPosts']),
-    getPostSuccess: function(response) {
+    ...mapActions(["getPosts"]),
+    getPostsSuccess: function(response) {
+      this.postList = []; // 清空现有数据
+
+      setTimeout(() => {
+        this.$refs.scroller.donePulldown(); // 设置刷新操作完成
+        this.pullupEnabled && this.$refs.scroller.enablePullup();
+      }, 500);
+
       if (this.posts === null) {
         return;
       }
@@ -74,44 +93,41 @@ export default {
           meta: {
             source: "",
             date: "",
-            other: "其他信息",
+            other: "其他信息"
           }
         };
         post.title = this.posts[i].title;
         post.desc = this.posts[i].description;
-        post.src += this.posts[i].postImgUrls.split(",")[0]
-        post.meta.source = this.posts[i].releaseUserId
+        post.src += this.posts[i].postImgUrls.split(",")[0];
+        post.meta.source = this.posts[i].releaseUserId;
         post.meta.date = this.posts[i].releaseTime;
-        post.meta.other = "奖金" + this.posts[i].reward
+        post.meta.other = "奖金" + this.posts[i].reward;
         this.postList.push(post);
       }
       console.log(response);
     },
-    getPostFail: function(error) {
+    getPostsFail: function(error) {
       console.log(error);
     },
     onImgError(item, $event) {
       $event;
       // console.log(item, $event)
     },
+
+    refresh() {
+      this.$nextTick(() => {
+        this.getPosts().then(this.getPostsSuccess, this.getPostsFail);
+      });
+    },
     loadMore() {
-      setTimeout(() => {
-        this.n += 10;
+      if (this.showListSize < this.postList.length) {
+        this.showListSize += 10;
         setTimeout(() => {
           this.$refs.scroller.donePullup();
-        }, 10);
-      }, 2000);
-    },
-    refresh() {
-      setTimeout(() => {
-        this.n = 10;
-        this.$nextTick(() => {
-          setTimeout(() => {
-            this.$refs.scroller.donePulldown();
-            this.pullupEnabled && this.$refs.scroller.enablePullup();
-          }, 10);
-        });
-      }, 2000);
+        }, 200);
+      } else {
+        this.changePullupStatus(false)
+      }
     },
     changePullupStatus(enabled) {
       if (enabled) {
@@ -121,18 +137,6 @@ export default {
         this.$refs.scroller.disablePullup();
         this.pullupEnabled = false;
       }
-    },
-    loadMore1() {
-      setTimeout(() => {
-        this.n1 += 10;
-        this.$nextTick(() => {
-          this.$refs.scroller1.donePullup();
-          if (this.n1 >= 30) {
-            this.$refs.scroller1.disablePullup();
-            console.log("No more data, Pullup disabled!");
-          }
-        });
-      }, 2000);
     }
   }
 };
