@@ -10,7 +10,7 @@
           <panel :header="'众寻列表'" :list="postList.slice(0, showListSize)" :type="'5'" @on-img-error="onImgError"></panel>
         </div>
         <!--pullup slot-->
-        <div slot="pullup" class="xs-plugin-pullup-container xs-plugin-pullup-up" style="position: absolute; width: 100%; height: 40px; bottom: -40px; text-align: center;">
+        <div slot="pullup" class="xs-plugin-pullup-container xs-plugin-pullup-up pull-up">
           <span v-show="status.pullupStatus === 'default'"></span>
           <span class="pullup-arrow" v-show="status.pullupStatus === 'down' || status.pullupStatus === 'up'" :class="{'rotate': status.pullupStatus === 'up'}">↑</span>
           <span v-show="status.pullupStatus === 'loading'"><spinner type="ios-small"></spinner></span>
@@ -61,9 +61,9 @@ export default {
     // 挂载后异步调用后台接口获取 list
     this.getPosts().then(this.getPostsSuccess, this.getPostsFail);
     if (this.showListSize < this.postList.length) {
-      this.changePullupStatus(true)
+      this.changePullupStatus(true);
     } else {
-      this.changePullupStatus(false)
+      this.changePullupStatus(false);
     }
   },
   computed: {
@@ -126,7 +126,7 @@ export default {
           this.$refs.scroller.donePullup();
         }, 200);
       } else {
-        this.changePullupStatus(false)
+        this.changePullupStatus(false);
       }
     },
     changePullupStatus(enabled) {
@@ -146,5 +146,12 @@ export default {
 .list-scroller {
   margin-top: 55px;
   margin-bottom: 40px;
+}
+.pull-up {
+  position: absolute;
+  bottom: -40px;
+  width: 100%;
+  height: 40px;
+  text-align: center;
 }
 </style>

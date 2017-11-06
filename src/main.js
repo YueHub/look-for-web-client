@@ -7,7 +7,8 @@ import router from './router'
 import axios from 'axios'    // axios
 
 import { Upload, Button, Dialog } from 'element-ui'
-import 'element-ui/lib/theme-default/index.css'
+// import 'element-ui/lib/theme-default/index.css'
+import 'element-ui/lib/theme-chalk/index.css'
 import { WechatPlugin } from 'vux'
 
 

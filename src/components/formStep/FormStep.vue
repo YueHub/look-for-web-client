@@ -25,7 +25,8 @@
             <div class="tool-tip">
               请填写招聘详细要求，如公司、职位、薪酬、职位技能要求等...
             </div>
-            <x-input title="手机号" placeholder="请输入手机号" v-model="phone"></x-input>
+            <x-input title="手机号" mask="999 9999 9999":max="13" is-type="china-mobile" placeholder="请输入手机号" v-model="phone"></x-input>
+            <!-- <x-input title="手机号码格式化"  v-model="maskValue"  ></x-input> -->
             <div class="tool-tip">
               请输入招聘联系电话，便于揭榜者和中标者联系
             </div>

@@ -32,9 +32,14 @@ const state = {
     mine: '1'
   },
   userId: '1', // 用户 Id
-  userName: null, // 用户名
-  popularityValue: null, // 用户人气值
-  creditValue: null, // 用户信用值
+  userBasicInfo: {
+    userName: null, // 用户名
+    selfIntroduction: null, // 用户自我介绍
+    phone: null, // 用户手机号
+    email: null, // 用户电子邮箱
+    popularityValue: null, // 用户人气值
+    creditValue: null, // 用户信用值
+  },
 
   posts: null,  // 大厅帖子
   releasePostInfo: null,  // 填写的发布信息
@@ -61,12 +66,20 @@ const mutations = {
   updatePosts: function (state, posts) {
     state.posts = posts
   },
+  // 更新用户基本信息
+  updateUserBasicInfo: function (state, userBasicInfo) {
+    state.userBasicInfo.userName = userBasicInfo.identifyId
+    state.userBasicInfo.selfIntroduction = userBasicInfo.selfIntroduction
+    state.userBasicInfo.phone = userBasicInfo.phone
+    state.userBasicInfo.email = userBasicInfo.email
+    state.userBasicInfo.popularityValue = userBasicInfo.popularityValue
+    state.userBasicInfo.creditValue = userBasicInfo.creditValue
+  },
   // 更新用户相关信息
-  updateUserInfo: function (state, userInfo) {
-    state.userName = userInfo.identifyId;
-    state.popularityValue = userInfo.popularityValue;
-    state.creditValue = userInfo.creditValue;
+  updateUser: function (state, userInfo) {
+   
     state.myReleases = userInfo.postReleases
+    
     state.myViews = userInfo.postViews
     state.myUncovers = userInfo.postUncovers
   },
@@ -86,7 +99,11 @@ const mutations = {
   updateMyWins: function (state, payload) {
     state.myWins = payload.myWins
   },
-  // 更新发布相关信息
+  // 更新用户个人设置信息
+  updateUserProfile: function (state, userProfile) {
+    state.userProfile = userProfile
+  },
+  // 更新发布添加相关信息
   updateReleasePostInfo: function (state, payload) {
     state.releasePostInfo = payload.releasePostInfo
   },
@@ -136,7 +153,28 @@ const actions = {
   },
 
   /**
-   * 获取用户信息
+   * 为某些页面提供更加轻便的获取用户个人信息的接口
+   * 获取用户个人基本信息
+   */
+  getUserBasicInfo: function ({commit}) {
+    return new Promise((resolve, reject) => {
+      axios({
+        method: "get",
+        url: "http://localhost:8080/userbasicinfo/" + state.userId
+      })
+        .then(function(response) {
+          let userBasicInfo = response.data.result;
+          commit('updateUserBasicInfo', userBasicInfo);
+          resolve(userBasicInfo)
+        })
+        .catch(function(error) {
+          reject(error)
+        });
+    })
+  },
+
+  /**
+   * 获取我的发布、我的浏览等用户信息
    */
   getUserInfo: function ({commit, state}) {
     return new Promise((resolve, reject) => {
@@ -146,8 +184,31 @@ const actions = {
       })
         .then(function(response) {
           let userInfo = response.data.result;
-          commit('updateUserInfo', userInfo);
+          commit('updateUser', userInfo);
+          commit('updateUserBasicInfo', userInfo);
           resolve(userInfo)
+        })
+        .catch(function(error) {
+          reject(error)
+        });
+    })
+  },
+
+
+  /**
+   * 更新用户个人基本信息
+   */
+  updatUserProfile: function({commit}, userProfile) {
+    return new Promise((resolve, reject) => {
+      axios({
+        method: "put",
+        url: "http://localhost:8080/user/" + state.userId,
+        data: userProfile
+      })
+        .then(function(response) {
+          let userProfile = response.data.result;
+          commit('updateUserProfile', userProfile);
+          resolve(userProfile)
         })
         .catch(function(error) {
           reject(error)

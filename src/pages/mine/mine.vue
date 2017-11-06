@@ -6,11 +6,11 @@
     <!-- mine cell list -->
     <div class="mine-cell-list">
       <group>
-        <cell :title="userName" is-link>
+        <cell :title="this.userBasicInfo.userName" is-link :link="{ path: '/myinfo' }">
           <img slot="icon" width="50" class="user-avatar" src="">
         </cell>
-        <cell :title="'人气值'" @click.native="onClick" :is-loading="!popularityValue" :value="popularityValue"></cell>
-        <cell :title="'信用等级'" @click.native="onClick" :is-loading="!creditValue" :value="creditValue"></cell>
+        <cell :title="'人气值'" @click.native="onClick" :is-loading="!this.userBasicInfo.popularityValue" :value="this.userBasicInfo.popularityValue"></cell>
+        <cell :title="'信用等级'" @click.native="onClick" :is-loading="!this.userBasicInfo.creditValue" :value="this.userBasicInfo.creditValue"></cell>
       </group>
 
       <group>
@@ -81,7 +81,7 @@ export default {
     this.getUserInfo().then(this.getUserInfoSuccess, this.getUserInfoFail)
   },
   computed: {
-    ...mapState(['userName', 'popularityValue', 'creditValue']),
+    ...mapState(['userBasicInfo']),
   },
   methods: {
     ...mapActions(['getUserInfo']),
