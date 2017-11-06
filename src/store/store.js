@@ -99,10 +99,6 @@ const mutations = {
   updateMyWins: function (state, payload) {
     state.myWins = payload.myWins
   },
-  // 更新用户个人设置信息
-  updateUserProfile: function (state, userProfile) {
-    state.userProfile = userProfile
-  },
   // 更新发布添加相关信息
   updateReleasePostInfo: function (state, payload) {
     state.releasePostInfo = payload.releasePostInfo
@@ -198,16 +194,16 @@ const actions = {
   /**
    * 更新用户个人基本信息
    */
-  updatUserProfile: function({commit}, userProfile) {
+  updateUserProfile: function({commit}, userProfile) {
     return new Promise((resolve, reject) => {
       axios({
         method: "put",
-        url: "http://localhost:8080/user/" + state.userId,
+        url: "http://localhost:8080/user",
         data: userProfile
       })
         .then(function(response) {
           let userProfile = response.data.result;
-          commit('updateUserProfile', userProfile);
+          commit('updateUserBasicInfo', userProfile);
           resolve(userProfile)
         })
         .catch(function(error) {

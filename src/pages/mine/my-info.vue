@@ -9,7 +9,7 @@
       </x-input>
     </group>
     <group>
-      <x-textarea v-model="selfIntroduce" title="自我介绍" placeholder="（可选）请填写自我介绍" :show-counter="false" :rows="4">
+      <x-textarea v-model="selfIntroduction" title="自我介绍" placeholder="（可选）请填写自我介绍" :show-counter="false" :rows="4">
 
       </x-textarea>
     </group>
@@ -19,7 +19,7 @@
     </div>
     
     <!-- 操作提示 -->
-    <x-switch :title="saveResultTitle" v-model="showSaveResult"></x-switch>
+    <toast v-model="showSaveResult">{{ saveResultTitle }}</toast>
   </div>
   
 
@@ -43,26 +43,34 @@ export default {
   data() {
     return {
       email: "",
-      selfIntroduce: "",
+      selfIntroduction: "",
       saveResultTitle: "",
       showSaveResult: false
     };
   },
   mounted() {
-    
+    this.getUserBasicInfo().then(this.getUserBasicInfoSuccess, this.getUserBasicInfoFail)
   },
   computed: {
-    ...mapState([''])
+    ...mapState(['userBasicInfo'])
   },
   methods: {
-    ...mapActions(['updatUserProfile']),
+    ...mapActions(['getUserBasicInfo', 'updateUserProfile']),
     saveUserProfile: function () {
       let userProfile = {
         identifyId: "1",
-        mail: this.email,
-        selfIntroduce: this.selfIntroduce
+        email: this.email,
+        selfIntroduction: this.selfIntroduction
       }
       this.updateUserProfile(userProfile).then(this.updateUserProfileSuccess, this.updateUserProfileFail)
+    },
+    getUserBasicInfoSuccess: function (userBasicInfo) {
+      this.email = this.userBasicInfo.email
+      this.selfIntroduction = this.userBasicInfo.selfIntroduction
+      console.log(userBasicInfo)
+    },
+    getUserBasicInfoFail: function (error) {
+      console.log(error)
     },
     updateUserProfileSuccess: function (response) {
       this.saveResultTitle = "保存成功"
