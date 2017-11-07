@@ -45,6 +45,8 @@ const state = {
   releasePostInfo: null,  // 填写的发布信息
   releaseStatus: null, // 帖子发布操作状态
 
+  singlePost: null, // 用户当前浏览的帖子信息
+
   myReleases: null,  // 用户发布的帖子
 
   myViews: null,  // 用户浏览过的帖子
@@ -117,6 +119,10 @@ const mutations = {
   updateShare: function (state, result) {
     state.forwards = result.forwards  // 更新用户转发图
     state.shareUrl = result.shareUrl  // 更新转发链接
+  },
+  // 更新用户当前浏览的帖子数据
+  updateSinglePost: function (state, singlePost) {
+    state.singlePost = singlePost
   }
 }
 
@@ -290,8 +296,27 @@ const actions = {
           reject(error)
         });
     })
-  }
+  },
 
+  /**
+   * 根据 ID 获取帖子
+   */
+  getPostById: function ({commit}, postId) {
+    return new Promise((resolve, reject) => {
+      axios({
+        method: "get",
+        url: "http://localhost:8080/postrelease/" + postId
+      })
+        .then(function(response) {
+          let post = response.data.result;
+          commit('updateSinglePost', post);
+          resolve(post)
+        })
+        .catch(function(error) {
+          reject(error)
+        });
+    })
+  }
 }
 
 export default new Vuex.Store({

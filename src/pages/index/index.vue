@@ -60,11 +60,11 @@ export default {
   mounted() {
     // 挂载后异步调用后台接口获取 list
     this.getPosts().then(this.getPostsSuccess, this.getPostsFail);
-    if (this.showListSize < this.postList.length) {
-      this.changePullupStatus(true);
-    } else {
-      this.changePullupStatus(false);
-    }
+    // if (this.showListSize < this.postList.length) {
+    //   this.changePullupStatus(true);
+    // } else {
+    //   this.changePullupStatus(false);
+    // }
   },
   computed: {
     ...mapState(["posts"])
@@ -89,7 +89,7 @@ export default {
           fallbackSrc: "/static/imgs/404-img.png",
           title: "",
           desc: "",
-          url: "/infoboard?postId=" + this.posts[i].identifyId,
+          url: "/infoboard?postId=" + this.posts[i].identifyId + "&&startUserId=" + this.posts[i].releaseUserId + "&&endUserId=" + '5', // TODO 这里的1 该换成 this.userId
           meta: {
             source: "",
             date: "",

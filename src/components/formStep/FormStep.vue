@@ -369,7 +369,7 @@ export default {
     },
 
     checkReleaseBasicInfo: function() {
-      var phoneReg = /^0{0,1}(13[0-9]|15[0-9]|153|156|18[7-9])[0-9]{8}$/; //手机正则
+      var phoneReg = /^0{0,1}(13[0-9]|15[0-9]|153|156|18[7-9]) [0-9]{4} [0-9]{4}$/; //手机正则
 
       if (this.title === "") {
         return {
