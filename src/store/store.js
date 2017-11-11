@@ -260,13 +260,12 @@ const actions = {
       })
         .then(function(response) {
           let result = {}
-          console.log('分享后路径')
+          
           var shareUrl = 'http://localhost:8080/postforward/forward?postId=' + userInfo.postId
           shareUrl += ' && startUserId = ' + userInfo.startUserId
           shareUrl += ' && endUserId = ' + userInfo.endUserId
           result.shareUrl = shareUrl
           result.forwards = []
-          console.log(shareUrl)
     
           // .then 
           commit('updateShare', result)

@@ -7,7 +7,7 @@
     <div class="list-scroller">
       <scroller lock-x scrollbar-y use-pullup use-pulldown :pulldown-config="pulldownConfig" @on-pulldown-loading="refresh" @on-pullup-loading="loadMore" v-model="status" ref="scroller">
         <div>
-          <panel :header="'众寻列表'" :list="postList.slice(0, showListSize)" :type="'5'" @on-img-error="onImgError"></panel>
+          <panel :header="'众寻大厅'" :list="postList.slice(0, showListSize)" :type="'5'" @on-img-error="onImgError"></panel>
         </div>
         <!--pullup slot-->
         <div slot="pullup" class="xs-plugin-pullup-container xs-plugin-pullup-up pull-up">
@@ -24,8 +24,8 @@
 </template>
 
 <script scoped>
-import { Scroller, Spinner, Panel } from "vux";
 import { mapState, mapActions } from "vuex";
+import { Scroller, Spinner, Panel } from "vux";
 import HeaderIndex from "@/components/common/HeaderIndex";
 import BottomTabBar from "@/components/common/BottomTabBar";
 
@@ -60,17 +60,13 @@ export default {
   mounted() {
     // 挂载后异步调用后台接口获取 list
     this.getPosts().then(this.getPostsSuccess, this.getPostsFail);
-    // if (this.showListSize < this.postList.length) {
-    //   this.changePullupStatus(true);
-    // } else {
-    //   this.changePullupStatus(false);
-    // }
   },
   computed: {
     ...mapState(["posts"])
   },
   methods: {
     ...mapActions(["getPosts"]),
+    /** 获取帖子成功 */
     getPostsSuccess: function(response) {
       this.postList = []; // 清空现有数据
 
@@ -89,7 +85,13 @@ export default {
           fallbackSrc: "/static/imgs/404-img.png",
           title: "",
           desc: "",
-          url: "/infoboard?postId=" + this.posts[i].identifyId + "&&startUserId=" + this.posts[i].releaseUserId + "&&endUserId=" + '5', // TODO 这里的1 该换成 this.userId
+          url:
+            "/infoboard?postId=" +
+            this.posts[i].identifyId +
+            "&&startUserId=" +
+            this.posts[i].releaseUserId +
+            "&&endUserId=" +
+            "5", // TODO 这里的1 该换成 this.userId
           meta: {
             source: "",
             date: "",
@@ -101,24 +103,28 @@ export default {
         post.src += this.posts[i].postImgUrls.split(",")[0];
         post.meta.source = this.posts[i].releaseUserId;
         post.meta.date = this.posts[i].releaseTime;
-        post.meta.other = "奖金" + this.posts[i].reward;
+        post.meta.other = "<span class='post_reward'>" + "奖金 " + this.posts[i].reward + "</span>";
         this.postList.push(post);
       }
-      console.log(response);
+      console.log("##########################");
+      console.log("########获取列表成功########");
+      console.log("##########################");
+      response; // TODO remove it
     },
+    /** 获取帖子失败 */
     getPostsFail: function(error) {
       console.log(error);
     },
     onImgError(item, $event) {
-      $event;
-      // console.log(item, $event)
+      console.log(item, $event)
     },
-
+    /** 刷新 */
     refresh() {
       this.$nextTick(() => {
         this.getPosts().then(this.getPostsSuccess, this.getPostsFail);
       });
     },
+    /** 加载更多 */
     loadMore() {
       if (this.showListSize < this.postList.length) {
         this.showListSize += 10;
@@ -142,7 +148,7 @@ export default {
 };
 </script>
 
-<style scoped>
+<style>
 .list-scroller {
   margin-top: 55px;
   margin-bottom: 40px;
@@ -153,5 +159,9 @@ export default {
   width: 100%;
   height: 40px;
   text-align: center;
+}
+.post_reward {
+  color: #de686d;
+  font-weight: 600;
 }
 </style>
