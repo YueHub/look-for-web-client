@@ -16,28 +16,40 @@
         <div class="tab-swiper">
             <div class="tab-swiper">
           <group gutter="0.1em" label-width="4.5em" label-margin-right="2em" label-align="left">
-            <x-input title="标题" placeholder="请填写标题" v-model="title"></x-input>
-            <x-input title="感谢金" placeholder="请输入感谢金" v-model="money"></x-input>
+            <x-input title="标题" placeholder="请填写标题（不超过30字）" :max="30" v-model="postRelease.title"></x-input>
+
+            <x-textarea title="招聘内容" placeholder="请填写招聘内容" :show-counter="false" :rows="4" v-model="postRelease.content"></x-textarea>
+            <div class="tool-tip">
+              请填写招聘内容，如公司、职位、薪酬等...
+            </div>
+
+            <x-textarea title="招聘要求" placeholder="请填写招聘要求" :show-counter="false" :rows="4" v-model="postRelease.description"></x-textarea>
+            <div class="tool-tip">
+              请填写学历要求，技能要求等...
+            </div>
+
+            <x-input title="感谢金" placeholder="请输入感谢金" v-model="postRelease.reward"></x-input>
             <div class="tool-tip">
               建议输入 200 以上金额
             </div>
-            <x-textarea title="详细信息" placeholder="请填写详细信息" :show-counter="false" :rows="4" v-model="detailInfo"></x-textarea>
-            <div class="tool-tip">
-              请填写招聘详细要求，如公司、职位、薪酬、职位技能要求等...
-            </div>
-            <x-input title="手机号" mask="999 9999 9999":max="13" is-type="china-mobile" placeholder="请输入手机号" v-model="phone"></x-input>
+            
+            <x-input title="手机号" mask="999 9999 9999":max="13" is-type="china-mobile" placeholder="请输入手机号" v-model="postRelease.phone"></x-input>
             <!-- <x-input title="手机号码格式化"  v-model="maskValue"  ></x-input> -->
             <div class="tool-tip">
               请输入招聘联系电话，便于揭榜者和中标者联系
             </div>
-            <x-switch title="微信号"></x-switch>
+
+            <x-input title="电子邮箱"is-type="email" placeholder="请输入电子邮箱" v-model="postRelease.email"></x-input>
+            
+            <div class="tool-tip">
+              请输入电子邮箱，便于揭榜者和中标者联系
+            </div>
+            
           </group>
 
           <div class="instruction">
-              注意事项注意事项注意事项注意事项注意事项注意事项注意事项注意事项注意事项注意事项
-              注意事项注意事项注意事项注意事项注意事项注意事项注意事项注意事项注意事项注意事项
-              注意事项注意事项注意事项注意事项注意事项注意事项注意事项注意事项注意事项注意事项
-            </div>
+            注意事项: 以上为均为必填信息，请认真填写.
+          </div>
         </div>
         </div>
       </swiper-item>
@@ -47,13 +59,13 @@
         <div class="tab-swiper">
           <div class="tab-swiper">
             <group>
-              <x-textarea v-model="selfIntroduce" title="自我介绍" placeholder="（可选）请填写自我介绍" :show-counter="false" :rows="4"></x-textarea>
+              <x-textarea v-model="postRelease.extraInfo" title="补充信息" placeholder="（可选）请填写自我介绍" :show-counter="false" :rows="4"></x-textarea>
             </group>
             <div class="tool-tip">
-                填写自我介绍可以为有意应聘的人提供更多的信息
+                填写一些补充信息，例如填写自我介绍，为有意应聘的人提供更多的信息
             </div>
 
-            <group title="上传图像">
+            <group title="上传封面图像">
               <el-upload
                 ref="fileUpload"
                 :http-request="onSubmit"
@@ -71,7 +83,7 @@
               </el-dialog>
             </group>
             <div class="tool-tip">
-                上传图像
+                上传封面图像
             </div>
           </div>
         </div>
@@ -84,9 +96,21 @@
             <div>
               <div class="instruction-title">注意事项</div>
               <div class="instruction">
-                注意事项注意事项注意事项注意事项注意事项注意事项注意事项注意事项注意事项注意事项
-                注意事项注意事项注意事项注意事项注意事项注意事项注意事项注意事项注意事项注意事项
-                注意事项注意事项注意事项注意事项注意事项注意事项注意事项注意事项注意事项注意事项
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                用户协议用户协议用户协议用户协议用户协议用户协议用户协议
+                用户协议用户协议用户协议用户协议用户协议用户协议用户协议
+                用户协议用户协议用户协议用户协议用户协议用户协议用户协议
+                用户协议用户协议用户协议用户协议用户协议用户协议用户协议<br/>
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                用户协议用户协议用户协议用户协议用户协议用户协议用户协议
+                用户协议用户协议用户协议用户协议用户协议用户协议用户协议
+                用户协议用户协议用户协议用户协议用户协议用户协议用户协议
+                用户协议用户协议用户协议用户协议用户协议用户协议用户协议<br/>
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                用户协议用户协议用户协议用户协议用户协议用户协议用户协议
+                用户协议用户协议用户协议用户协议用户协议用户协议用户协议
+                用户协议用户协议用户协议用户协议用户协议用户协议用户协议
+                用户协议用户协议用户协议用户协议用户协议用户协议用户协议
               </div>
             </div>
 
@@ -104,8 +128,6 @@
         </div>
       </swiper-item>
     </swiper>
-
-    
 
     <!-- prevStep and nextStep button -->
     <div class="prev-step-btn">
@@ -127,6 +149,7 @@
 </template>
 
 <script scoped>
+import { mapState, mapMutations, mapActions } from "vuex";
 import {
   Group,
   GroupTitle,
@@ -143,8 +166,6 @@ import {
   Loading,
   TransferDomDirective as TransferDom
 } from "vux";
-
-import { mapState, mapMutations, mapActions } from 'vuex'
 
 const list = () => ["必填信息", "附加信息", "发布 / 预览"];
 
@@ -177,13 +198,17 @@ export default {
       showWarnMsg: false,
       warnMsg: "",
 
-      title: "",
-      money: 0,
-      detailInfo: "",
-      wechat: "",
-      phone: "",
+      postRelease: {
+        user: "",
+        title: "",
+        content: "",
+        description: "",
+        reward: 0,
+        phone: "",
+        email: "",
+        extraInfo: ""
+      },
 
-      selfIntroduce: "",
       autoUpload: false,
       uploadFileCount: 0,
       fileList: [],
@@ -212,12 +237,15 @@ export default {
       }
     }
   },
+  mounted() {
+    this.postRelease.user = this.userId;
+  },
   computed: {
-    ...mapState(['releasePostInfo', 'releaseStatus'])
+    ...mapState(["userId", "releasePostInfo", "releaseStatus"])
   },
   methods: {
-    ...mapMutations(['updateReleasePostInfo']),
-    ...mapActions(['addPost']),
+    ...mapMutations(["updateReleasePostInfo", "updateSinglePost"]),
+    ...mapActions(["addPost"]),
     handleRemove: function(file, fileList) {
       this.uploadFileCount = fileList.length;
     },
@@ -255,16 +283,7 @@ export default {
       this.fileList.push(fileUpload.file);
       let formData = new FormData();
 
-      let postRelease = {
-        user: "1",
-        title: this.title,
-        content: this.detailInfo,
-        description: this.detailInfo,
-        reward: this.money,
-        phone: this.phone,
-        email: "xxxxx@163.com",
-        selfIntroduce: this.selfIntroduce
-      };
+      let postRelease = this.postRelease;
 
       for (let key in postRelease) {
         formData.append(key, postRelease[key]); // 帖子信息
@@ -278,46 +297,42 @@ export default {
       this.updateReleasePostInfo({
         type: "updateReleasePostInfo",
         releasePostInfo: formData
-      })
+      });
 
-      // 上传数据
-      // axios({
-      //   method: "post",
-      //   url: "http://localhost:8080/postrelease",
-      //   data: formData
-      // })
-      //   .then(function(response) {
-      //     releaseSuccessCallBack(response);
-      //   })
-      //   .catch(function(error) {
-      //     releaseFailCallBack(error);
-      //   });
-      this.addPost().then(this.releaseSuccessCallBack, this.releaseFailCallBack)
+      this.addPost().then(
+        this.releaseSuccessCallBack,
+        this.releaseFailCallBack
+      );
       this.uploadCount = 0; // 置 0 可以继续提交
     },
     releaseSuccessCallBack: function(response) {
       this.loadingShow = false;
       console.log(response);
-      if (this.releaseStatus === 'success') {
+      if (this.releaseStatus === "success") {
         this.$router.push({
           name: "release-result",
           params: {
             title: "发布成功!",
             description: "招聘帖子已经发布",
-            iconType: "success"
+            iconType: "success",
+            postId: response.data.identifyId
           }
         });
       }
+      console.log("##########################");
+      console.log("######## 帖子发布成功 ########");
+      console.log("##########################");
+      response; // TODO remove it
     },
     releaseFailCallBack: function(error) {
       this.$router.push({
-          name: "release-result",
-          params: {
-            title: "发布失败!",
-            description: "发现错误，请尝试重新提交",
-            iconType: "warn"
-          }
-        });
+        name: "release-result",
+        params: {
+          title: "发布失败!",
+          description: "发现错误，请尝试重新提交",
+          iconType: "warn"
+        }
+      });
       console.log("############################");
       console.log(error);
       console.log("############################");
@@ -371,32 +386,32 @@ export default {
     checkReleaseBasicInfo: function() {
       var phoneReg = /^0{0,1}(13[0-9]|15[0-9]|153|156|18[7-9]) [0-9]{4} [0-9]{4}$/; //手机正则
 
-      if (this.title === "") {
+      if (this.postRelease.title === "") {
         return {
           status: "fail",
           failMsg: "标题不能为空"
         };
       }
-      if (this.money === 0) {
+      if (this.postRelease.reward === 0) {
         this.moneyFocus = true;
         return {
           status: "fail",
           failMsg: "奖金不能为 0"
         };
       }
-      if (this.detailInfo === "") {
+      if (this.postRelease.detailInfo === "") {
         return {
           status: "fail",
           failMsg: "详细信息不能为空"
         };
       }
-      if (this.phone === "") {
+      if (this.postRelease.phone === "") {
         return {
           status: "fail",
           failMsg: "手机号不能为空"
         };
       }
-      if (!phoneReg.test(this.phone)) {
+      if (!phoneReg.test(this.postRelease.phone)) {
         return {
           status: "fail",
           failMsg: "请输入正确格式的手机号"
@@ -409,6 +424,7 @@ export default {
       };
     },
     previewInfoBoard: function() {
+      this.updateSinglePost();
       this.$router.push({ name: "InfoBoard" });
     }
   }

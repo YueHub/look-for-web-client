@@ -28,6 +28,7 @@ export default {
   },
   data() {
     return {
+      postId: "",
       title: "",
       description: "",
       iconType: "", // success warn info waiting
@@ -36,16 +37,18 @@ export default {
   },
   mounted() {
     this.$nextTick(() => {
-      this.title = this.$route.params.title;
-      this.description = this.$route.params.description;
-      this.iconType = this.$route.params.iconType;
+      this.postId = this.$route.params.postId
+      this.title = this.$route.params.title
+      this.description = this.$route.params.description
+      this.iconType = this.$route.params.iconType
+
       if (this.iconType === "success") {
         var shareButton = {
           type: "primary",
           text: "立即分享",
           onClick: this.sharePost.bind(this)
         };
-        var viewButton = { type: "default", text: "查看", link: "/demo" };
+        var viewButton = { type: "default", text: "查看", link: "/infoboard?postId=" + this.postId };
         this.buttons.push(shareButton);
         this.buttons.push(viewButton);
       } else if (this.iconType === "warn") {
