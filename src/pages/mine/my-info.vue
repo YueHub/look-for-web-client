@@ -3,6 +3,13 @@
   <header-back :title="'个人信息'"></header-back>
 
   <div class="my-info">
+
+    <group>
+      <x-input title="手机号" mask="999 9999 9999":max="13" is-type="china-mobile" placeholder="请输入手机号" v-model="phone">
+
+      </x-input>
+    </group>
+
     <group>
       <x-input title="邮箱" name="email" placeholder="请输入邮箱地址" is-type="email" v-model="email">
 
@@ -42,6 +49,7 @@ export default {
   },
   data() {
     return {
+      phone: "",
       email: "",
       selfIntroduction: "",
       saveResultTitle: "",
@@ -52,19 +60,21 @@ export default {
     this.getUserBasicInfo().then(this.getUserBasicInfoSuccess, this.getUserBasicInfoFail)
   },
   computed: {
-    ...mapState(['userBasicInfo'])
+    ...mapState(['userId', 'userBasicInfo'])
   },
   methods: {
     ...mapActions(['getUserBasicInfo', 'updateUserProfile']),
     saveUserProfile: function () {
       let userProfile = {
-        identifyId: "1",
+        identifyId: this.userId,
+        phone: this.phone,
         email: this.email,
         selfIntroduction: this.selfIntroduction
       }
       this.updateUserProfile(userProfile).then(this.updateUserProfileSuccess, this.updateUserProfileFail)
     },
     getUserBasicInfoSuccess: function (userBasicInfo) {
+      this.phone = this.userBasicInfo.phone
       this.email = this.userBasicInfo.email
       this.selfIntroduction = this.userBasicInfo.selfIntroduction
       console.log(userBasicInfo)
