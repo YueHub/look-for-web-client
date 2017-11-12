@@ -31,7 +31,7 @@ const state = {
     release: '0',
     mine: '1'
   },
-  userId: '1', // 用户 Id
+  userId: '3', // 用户 Id
   userBasicInfo: {
     userName: null, // 用户名
     selfIntroduction: null, // 用户自我介绍
@@ -284,7 +284,7 @@ const actions = {
     return new Promise((resolve, reject) => {
       axios({
         method: "get",
-        url: "http://localhost:8080/postforward/" + userInfo.postId + "/" + userInfo.startUserId + "/" + userInfo.endUserId
+        url: "http://localhost:8080/postforward/" + userInfo.postId + "/" + userInfo.startUserId + "/" + userInfo.endUserId 
       })
         .then(function(response) {
           let userInfo = response.data;

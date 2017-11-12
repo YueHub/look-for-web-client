@@ -6,7 +6,7 @@
 
       <!-- 标题 -->
       <div class="post-title"> 
-        {{ this.post.title}}
+        {{ this.post.title }}
       </div>
       <!-- 作者 -->
       <div class="author">
@@ -39,10 +39,7 @@
         <div class="content-title">
           招聘内容
         </div>
-        <div class="content-content">
-          {{ this.post.content }}
-          {{ this.post.content }}
-          {{ this.post.content }}
+        <div class="content-content" v-html="this.post.content">
           {{ this.post.content }}
         </div>
       </div>
@@ -52,13 +49,7 @@
         <div class="description-title">
           招聘要求
         </div>
-        <div class="description-content">
-          {{ this.post.description }}
-          {{ this.post.description }}
-          {{ this.post.description }}
-          {{ this.post.description }}
-          {{ this.post.description }}
-          {{ this.post.description }}
+        <div class="description-content" v-html="this.post.description">
           {{ this.post.description }}
         </div>
       </div>
@@ -72,8 +63,8 @@
         <div class="contact-content">
           <span>发布人: {{ this.post.user.identifyId }}</span>
           <span>微信号: {{ this.post.user.identifyId }}</span>
-          <span>手机: {{ this.post.user.phone }}</span>
-          <span>电子邮箱: {{ this.post.user.email }}</span>
+          <span v-if="this.post.user.phone !== ''">手机: {{ this.post.user.phone }}</span>
+          <span v-if="this.post.user.email !== ''">电子邮箱: {{ this.post.user.email }}</span>
           <span>发布人介绍: {{ this.post.user.selfIntroduction }}</span>
         </div>
       </div>
@@ -92,7 +83,7 @@
 
     <group title="set type = tel">
       <x-input title='帖子ID' type="tel" v-model="postId"></x-input>
-      <x-input title='源头ID' type="tel" v-model="startUserId"></x-input>
+      <x-input title='源头ID' type="tel" v-model="post.user.identifyId"></x-input>
       <x-input title='本用户ID' type="tel" v-model="endUserId"></x-input>
     </group>
     <x-button type="primary" @click.native="testShare" style="width: 50%;">分享测试</x-button>
@@ -123,7 +114,6 @@ export default {
   data() {
     return {
       postId: null, // 该帖 ID
-      startUserId: null,
       endUserId: null,
       post: null,
       sharePath: ""
@@ -132,7 +122,6 @@ export default {
   mounted() {
     this.$nextTick(() => {
       this.postId = this.$route.query.postId
-      this.startUserId = this.$route.query.startUserId
       this.endUserId = this.$route.query.endUserId
       if (this.postId === null || "" === this.postId) {
         return;
@@ -141,12 +130,6 @@ export default {
         this.getPostByIdSuccess,
         this.getPostByIdFail
       );
-
-      let userInfo = {};
-      userInfo.postId = this.postId;
-      userInfo.startUserId = this.startUserId;
-      userInfo.endUserId = this.endUserId;
-      this.getSharePath(userInfo).then(this.getSharePathSuccess, this.getSharePathFail);
 
       console.log("postId", this.postId);
     });
@@ -159,23 +142,29 @@ export default {
     getPostByIdSuccess: function(post) {
       this.post = post;
       console.log(post);
+      // 获取分享路径
+      let userInfo = {};
+      userInfo.postId = this.postId;
+      userInfo.startUserId = this.post.user.identifyId;
+      userInfo.endUserId = this.endUserId;
+      this.getSharePath(userInfo).then(this.getSharePathSuccess, this.getSharePathFail);
+      
     },
     getPostByIdFail: function(error) {
       console.log(error);
     },
     testShare: function() {
-      console.log(this.startUserId);
       console.log(this.endUserId);
       let userInfo = {};
       userInfo.postId = this.postId;
-      userInfo.startUserId = this.startUserId;
+      userInfo.startUserId = this.post.user.identifyId;
       userInfo.endUserId = this.endUserId;
       this.sharePost(userInfo).then(this.sharePostSuccess, this.sharePostFail);
     },
     testGetSharePath: function() {
       let userInfo = {};
       userInfo.postId = this.postId;
-      userInfo.startUserId = this.startUserId;
+      userInfo.startUserId = this.post.user.identifyId;
       userInfo.endUserId = this.endUserId;
       this.getSharePath(userInfo).then(this.getSharePathSuccess, this.getSharePathFail);
     },
@@ -243,6 +232,7 @@ export default {
   vertical-align: middle;
   display: inline-block;
   margin-left: 8px;
+  width: 80%;
 }
 
 .author .name {
@@ -269,7 +259,7 @@ export default {
 .post-img {
   margin-left: auto;
   margin-right: auto;
-  width: 50%;
+  width: 70%;
 }
 
 .post-img img {

@@ -62,7 +62,7 @@ export default {
     this.getPosts().then(this.getPostsSuccess, this.getPostsFail);
   },
   computed: {
-    ...mapState(["posts"])
+    ...mapState(["userId", "posts"])
   },
   methods: {
     ...mapActions(["getPosts"]),
@@ -87,11 +87,7 @@ export default {
           desc: "",
           url:
             "/infoboard?postId=" +
-            this.posts[i].identifyId +
-            "&&startUserId=" +
-            this.posts[i].releaseUserId +
-            "&&endUserId=" +
-            "5", // TODO 这里的1 该换成 this.userId
+            this.posts[i].identifyId + "&endUserId=" + this.userId, // TODO 这里的1 该换成 this.userId
           meta: {
             source: "",
             date: "",
@@ -107,7 +103,7 @@ export default {
         this.postList.push(post);
       }
       console.log("##########################");
-      console.log("########获取列表成功########");
+      console.log("######## 获取列表成功 ########");
       console.log("##########################");
       response; // TODO remove it
     },
