@@ -242,6 +242,26 @@ const actions = {
     })
   },
 
+   /**
+   * 根据 ID 获取帖子
+   */
+  getPostById: function ({commit}, postId) {
+    return new Promise((resolve, reject) => {
+      axios({
+        method: "get",
+        url: "http://localhost:8080/postrelease/" + postId
+      })
+        .then(function(response) {
+          let post = response.data.result;
+          commit('updateSinglePost', post);
+          resolve(post)
+        })
+        .catch(function(error) {
+          reject(error)
+        });
+    })
+  },
+
   /**
    * 分享转发帖子
    */
@@ -298,24 +318,27 @@ const actions = {
   },
 
   /**
-   * 根据 ID 获取帖子
+   * 帖子揭榜
    */
-  getPostById: function ({commit}, postId) {
+  addUncover: function ({commit}, uncoverInfoFormdata) {
     return new Promise((resolve, reject) => {
       axios({
-        method: "get",
-        url: "http://localhost:8080/postrelease/" + postId
+        method: "post",
+        url: "http://localhost:8080/postuncover",
+        data: uncoverInfoFormdata
       })
         .then(function(response) {
-          let post = response.data.result;
-          commit('updateSinglePost', post);
-          resolve(post)
+          let releaseUncover = response.data;
+          // commit('updateUserInfo', userInfo);
+          resolve(releaseUncover)
         })
         .catch(function(error) {
           reject(error)
         });
     })
   }
+ 
+
 }
 
 export default new Vuex.Store({

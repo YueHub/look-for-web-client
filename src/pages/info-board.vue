@@ -79,6 +79,12 @@
         </div>
       </div>
 
+      <!-- 转发和揭榜按钮 -->
+      <div class="share-uncover-btn">
+        <el-button type="primary" class="circle-button">转发</el-button>
+        <!-- <el-button type="danger" class="circle-button" @click="uncover">揭榜</el-button> -->
+      </div>
+      
     </div>
 
     <group title="set type = tel">
@@ -86,7 +92,7 @@
       <x-input title='源头ID' type="tel" v-model="post.user.identifyId"></x-input>
       <x-input title='本用户ID' type="tel" v-model="endUserId"></x-input>
     </group>
-    <x-button type="primary" @click.native="testShare" style="width: 50%;">分享测试</x-button>
+    <x-button type="primary" @click.native="testShare" style="width: 50%;">转发测试</x-button>
     <div class="instruction">
       分享链接: {{ shareUrl }}
     </div>
@@ -121,8 +127,8 @@ export default {
   },
   mounted() {
     this.$nextTick(() => {
-      this.postId = this.$route.query.postId
-      this.endUserId = this.$route.query.endUserId
+      this.postId = this.$route.query.postId;
+      this.endUserId = this.$route.query.endUserId;
       if (this.postId === null || "" === this.postId) {
         return;
       }
@@ -135,10 +141,10 @@ export default {
     });
   },
   computed: {
-    ...mapState(["singlePost", "shareUrl"])
+    ...mapState(["userId", "singlePost", "shareUrl"])
   },
   methods: {
-    ...mapActions(["getPostById", "sharePost", "getSharePath"]),
+    ...mapActions(["getPostById", "sharePost", "getSharePath", "addUncover"]),
     getPostByIdSuccess: function(post) {
       this.post = post;
       console.log(post);
@@ -147,10 +153,33 @@ export default {
       userInfo.postId = this.postId;
       userInfo.startUserId = this.post.user.identifyId;
       userInfo.endUserId = this.endUserId;
-      this.getSharePath(userInfo).then(this.getSharePathSuccess, this.getSharePathFail);
-      
+      this.getSharePath(userInfo).then(
+        this.getSharePathSuccess,
+        this.getSharePathFail
+      );
     },
     getPostByIdFail: function(error) {
+      console.log(error);
+    },
+
+    uncover: function() {
+      let uncoverInfo = {
+        postId: this.postId,
+        userId: this.userId,
+        reason: "测试"
+      };
+      let formData = new FormData();
+
+      for (let key in uncoverInfo) {
+        formData.append(key, uncoverInfo[key]); // 帖子信息
+      }
+      console.log(formData)
+      this.addUncover(formData).then(this.uncoverSuccess, this.uncoverFail);
+    },
+    uncoverSuccess: function(response) {
+      console.log(response);
+    },
+    uncoverFail: function(error) {
       console.log(error);
     },
     testShare: function() {
@@ -166,7 +195,10 @@ export default {
       userInfo.postId = this.postId;
       userInfo.startUserId = this.post.user.identifyId;
       userInfo.endUserId = this.endUserId;
-      this.getSharePath(userInfo).then(this.getSharePathSuccess, this.getSharePathFail);
+      this.getSharePath(userInfo).then(
+        this.getSharePathSuccess,
+        this.getSharePathFail
+      );
     },
 
     sharePostSuccess: function() {
@@ -180,11 +212,11 @@ export default {
       for (let i = 0; i < response.length; i++) {
         array.push(response[i].identifyId);
       }
-      this.sharePath = array.join("——>")
+      this.sharePath = array.join("——>");
       console.log("获取成功", response);
     },
-    getSharePathFail: function (error) {
-      console.log("获取失败", error)
+    getSharePathFail: function(error) {
+      console.log("获取失败", error);
     }
   }
 };
@@ -266,7 +298,10 @@ export default {
   width: 100%;
 }
 
-.content-title, .description-title, .contact-title, .forward-title {
+.content-title,
+.description-title,
+.contact-title,
+.forward-title {
   margin-top: 2em;
   font-size: 1.5em;
   font-weight: 700;
@@ -274,5 +309,16 @@ export default {
 
 .contact-content span {
   display: block;
+}
+
+.share-uncover-btn {
+  margin-top: 20%;
+  text-align: center;
+}
+
+.circle-button {
+  width: 7em;
+  height: 7em;
+  border-radius: 3.5em;
 }
 </style>
