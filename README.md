@@ -42,4 +42,4 @@ npm run build
 
 ## License
 [MIT License]
-()
+(https://github.com/YueHub/look-for-web-client/blob/master/LICENSE)
