@@ -41,5 +41,4 @@ npm run build
 ![image](./screenShots/我的.png)
 
 ## License
-[MIT License]
-(https://github.com/YueHub/look-for-web-client/blob/master/LICENSE)
+[MIT License](https://github.com/YueHub/look-for-web-client/blob/master/LICENSE)
